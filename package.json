@@ -1,0 +1,19 @@
+{
+  "name": "com.chark.scriptable-scenes",
+  "displayName": "Scriptable Scenes",
+  "author": {
+    "name": "CHARK",
+    "url": "https://chark.io"
+  },
+  "version": "0.0.1",
+  "unity": "2020.3",
+  "description": "Simple scene loading and management system for Unity Engine, implemented via scriptable objects.",
+  "keywords": [
+    "scenes",
+    "scriptableobject",
+    "unity",
+    "architecture"
+  ],
+  "samples": [
+  ]
+}

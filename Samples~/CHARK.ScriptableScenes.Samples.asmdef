@@ -1,0 +1,16 @@
+{
+    "name": "CHARK.ScriptableScenes.Samples",
+    "rootNamespace": "CHARK.ScriptableScenes.Samples",
+    "references": [
+        "GUID:7cfa357a9d1c66644b9ddbad9d55c0a3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
