@@ -1,0 +1,50 @@
+# See: https://game.ci/docs/github/getting-started
+name: CI
+
+on:
+  workflow_dispatch: { }
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Unity Tests Workflow
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+        unityVersion:
+          - 2020.3.34f1
+
+    steps:
+
+      # Checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library
+
+      # Test
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v2
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Test Results
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: Test Restuls
+          path: ${{ steps.tests.outputs.artifactsPath }}
