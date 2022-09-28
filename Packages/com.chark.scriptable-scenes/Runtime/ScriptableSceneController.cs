@@ -193,35 +193,45 @@ namespace CHARK.ScriptableScenes
             BaseScriptableSceneCollection collection
         )
         {
-            yield return collection.ShowTransitionRoutine();
-            if (loadedCollection != false)
+            // TODO: reduce nesting
+            try
             {
+                collection.CollectionEvents.AddTransitionListeners(collectionEvents);
+                yield return collection.ShowTransitionRoutine();
+
+                if (loadedCollection != false)
+                {
+                    try
+                    {
+                        loadedCollection.CollectionEvents.AddListeners(collectionEvents);
+                        loadedCollection.SceneEvents.AddListeners(sceneEvents);
+                        yield return loadedCollection.UnloadRoutine();
+                    }
+                    finally
+                    {
+                        loadedCollection.CollectionEvents.RemoveListeners(collectionEvents);
+                        loadedCollection.SceneEvents.RemoveListeners(sceneEvents);
+                    }
+                }
+
                 try
                 {
-                    loadedCollection.CollectionEvents.AddListeners(collectionEvents);
-                    loadedCollection.SceneEvents.AddListeners(sceneEvents);
-                    yield return loadedCollection.UnloadRoutine();
+                    collection.CollectionEvents.AddListeners(collectionEvents);
+                    collection.SceneEvents.AddListeners(sceneEvents);
+                    yield return collection.LoadRoutine();
                 }
                 finally
                 {
-                    loadedCollection.CollectionEvents.RemoveListeners(collectionEvents);
-                    loadedCollection.SceneEvents.RemoveListeners(sceneEvents);
+                    collection.CollectionEvents.RemoveListeners(collectionEvents);
+                    collection.SceneEvents.RemoveListeners(sceneEvents);
                 }
-            }
 
-            try
-            {
-                collection.CollectionEvents.AddListeners(collectionEvents);
-                collection.SceneEvents.AddListeners(sceneEvents);
-                yield return collection.LoadRoutine();
+                yield return collection.HideTransitionRoutine();
             }
             finally
             {
-                collection.CollectionEvents.RemoveListeners(collectionEvents);
-                collection.SceneEvents.RemoveListeners(sceneEvents);
+                collection.CollectionEvents.RemoveTransitionListeners(collectionEvents);
             }
-
-            yield return collection.HideTransitionRoutine();
         }
 
         #endregion
