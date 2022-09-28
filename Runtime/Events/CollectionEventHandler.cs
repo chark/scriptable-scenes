@@ -32,6 +32,18 @@ namespace CHARK.ScriptableScenes.Events
         private UnityEvent<CollectionUnloadEventArgs> onUnloadExited =
             new UnityEvent<CollectionUnloadEventArgs>();
 
+        [SerializeField]
+        private UnityEvent onShowTransitionEntered = new UnityEvent();
+
+        [SerializeField]
+        private UnityEvent onShowTransitionExited = new UnityEvent();
+
+        [SerializeField]
+        private UnityEvent onHideTransitionEntered = new UnityEvent();
+
+        [SerializeField]
+        private UnityEvent onHideTransitionExited = new UnityEvent();
+
         #endregion
 
         #region Public Events
@@ -45,6 +57,14 @@ namespace CHARK.ScriptableScenes.Events
         public event CollectionUnloadEvent OnUnloadEntered;
 
         public event CollectionUnloadEvent OnUnloadExited;
+
+        public event CollectionTransitionEvent OnShowTransitionEntered;
+
+        public event CollectionTransitionEvent OnShowTransitionExited;
+
+        public event CollectionTransitionEvent OnHideTransitionEntered;
+
+        public event CollectionTransitionEvent OnHideTransitionExited;
 
         #endregion
 
@@ -149,6 +169,59 @@ namespace CHARK.ScriptableScenes.Events
             {
                 onUnloadExited.Invoke(args);
                 OnUnloadExited?.Invoke(args);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
+            }
+        }
+
+        // TODO: these events below are not tested
+        internal void RaiseShowTransitionEntered()
+        {
+            try
+            {
+                onShowTransitionEntered.Invoke();
+                OnShowTransitionEntered?.Invoke();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
+            }
+        }
+
+        internal void RaiseShowTransitionExited()
+        {
+            try
+            {
+                onShowTransitionExited.Invoke();
+                OnShowTransitionExited?.Invoke();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
+            }
+        }
+
+        internal void RaiseHideTransitionEntered()
+        {
+            try
+            {
+                onHideTransitionEntered.Invoke();
+                OnHideTransitionEntered?.Invoke();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError(exception);
+            }
+        }
+
+        internal void RaiseHideTransitionExited()
+        {
+            try
+            {
+                onHideTransitionExited.Invoke();
+                OnHideTransitionExited?.Invoke();
             }
             catch (Exception exception)
             {

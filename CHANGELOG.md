@@ -11,7 +11,7 @@ Minor UX updates and bug fixes.
 - More logging which shows that a scene is being currently loaded.
 - Methods to access in `loadingCollection` and `loadedCollection` in `ScriptableSceneController`.
 - Exposed `IsLoading` property in `ScriptableSceneController`.
-- Events in `BaseScriptableSceneTransition`.
+- Events which are fired when transitions are entered and exited.
 
 ### Changed
 - Updated Scene Manager Window to support reordering and to provide more info.
