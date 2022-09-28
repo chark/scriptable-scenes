@@ -10,7 +10,7 @@ on:
 jobs:
   split-upm:
     name: Split UPM branch
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:

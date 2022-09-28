@@ -6,7 +6,7 @@ on:
 jobs:
   activation:
     name: Request manual activation file 🔑
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     steps:
 
       # Request manual activation file
