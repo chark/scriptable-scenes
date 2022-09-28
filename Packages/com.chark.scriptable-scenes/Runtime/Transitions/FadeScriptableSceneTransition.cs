@@ -49,16 +49,16 @@ namespace CHARK.ScriptableScenes.Transitions
 
         #endregion
 
-        #region Public Methods
+        #region Protected Methods
 
-        public override IEnumerator ShowRoutine()
+        protected override IEnumerator OnShowRoutine()
         {
             // Fade in the curtains.
             ShowFadeCanvas();
             yield return FadeRoutine(fadeOutAlpha, fadeInAlpha, fadeInDurationSeconds);
         }
 
-        public override IEnumerator HideRoutine()
+        protected override IEnumerator OnHideRoutine()
         {
             if (fadeOutWaitDurationSeconds > 0.0f)
             {
