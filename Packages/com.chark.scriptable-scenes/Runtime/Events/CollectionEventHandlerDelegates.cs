@@ -14,4 +14,10 @@
     /// Invoked when <see cref="BaseScriptableSceneCollection"/> starts to unload or is unloaded.
     /// </summary>
     public delegate void CollectionUnloadEvent(CollectionUnloadEventArgs args);
+
+    /// <summary>
+    /// Invoked when <see cref="BaseScriptableSceneCollection"/> starts to show or hides the
+    /// transition.
+    /// </summary>
+    public delegate void CollectionTransitionEvent(); // TODO: add args
 }

@@ -180,6 +180,10 @@ namespace CHARK.ScriptableScenes.Utilities
             handler.OnLoadProgress += otherHandler.RaiseLoadProgress;
             handler.OnUnloadEntered += otherHandler.RaiseUnloadEntered;
             handler.OnUnloadExited += otherHandler.RaiseUnloadExited;
+            handler.OnShowTransitionEntered += otherHandler.RaiseShowTransitionEntered;
+            handler.OnShowTransitionExited += otherHandler.RaiseShowTransitionExited;
+            handler.OnHideTransitionEntered += otherHandler.RaiseHideTransitionEntered;
+            handler.OnHideTransitionExited += otherHandler.RaiseHideTransitionExited;
         }
 
         // TODO: how can we avoid this?
@@ -193,6 +197,10 @@ namespace CHARK.ScriptableScenes.Utilities
             handler.OnLoadProgress -= otherHandler.RaiseLoadProgress;
             handler.OnUnloadEntered -= otherHandler.RaiseUnloadEntered;
             handler.OnUnloadExited -= otherHandler.RaiseUnloadExited;
+            handler.OnShowTransitionEntered -= otherHandler.RaiseShowTransitionEntered;
+            handler.OnShowTransitionExited -= otherHandler.RaiseShowTransitionExited;
+            handler.OnHideTransitionEntered -= otherHandler.RaiseHideTransitionEntered;
+            handler.OnHideTransitionExited -= otherHandler.RaiseHideTransitionExited;
         }
 
         // TODO: how can we avoid this?

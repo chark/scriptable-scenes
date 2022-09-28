@@ -29,6 +29,26 @@
         /// </summary>
         public event CollectionUnloadEvent OnUnloadExited;
 
+        /// <summary>
+        /// Called when transition of <see cref="BaseScriptableSceneCollection"/> starts to show.
+        /// </summary>
+        public event CollectionTransitionEvent OnShowTransitionEntered;
+
+        /// <summary>
+        /// Called when transition of <see cref="BaseScriptableSceneCollection"/> is shown.
+        /// </summary>
+        public event CollectionTransitionEvent OnShowTransitionExited;
+
+        /// <summary>
+        /// Called when transition of <see cref="BaseScriptableSceneCollection"/> starts to hide.
+        /// </summary>
+        public event CollectionTransitionEvent OnHideTransitionEntered;
+
+        /// <summary>
+        /// Called when transition of <see cref="BaseScriptableSceneCollection"/> is hidden.
+        /// </summary>
+        public event CollectionTransitionEvent OnHideTransitionExited;
+
         #endregion
     }
 }

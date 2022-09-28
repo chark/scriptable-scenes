@@ -97,7 +97,9 @@ namespace CHARK.ScriptableScenes
         {
             if (transition)
             {
+                collectionEvents.RaiseShowTransitionEntered();
                 yield return transition.ShowRoutine();
+                collectionEvents.RaiseShowTransitionExited();
             }
         }
 
@@ -105,7 +107,9 @@ namespace CHARK.ScriptableScenes
         {
             if (transition)
             {
+                collectionEvents.RaiseHideTransitionEntered();
                 yield return transition.HideRoutine();
+                collectionEvents.RaiseHideTransitionExited();
             }
         }
 
