@@ -156,7 +156,7 @@ namespace CHARK.ScriptableScenes.Utilities
             var targetSceneBuildIndex = scriptableScene.SceneBuildIndex;
             scene = default;
 
-            foreach (var loadedScene in GetLoadedScenes())
+            foreach (var loadedScene in GetValidScenes())
             {
                 var loadedSceneBuildIndex = loadedScene.buildIndex;
                 if (targetSceneBuildIndex == loadedSceneBuildIndex)
@@ -253,18 +253,6 @@ namespace CHARK.ScriptableScenes.Utilities
 
         #region Private Methods
 
-        private static IEnumerable<Scene> GetLoadedScenes()
-        {
-            for (var sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
-            {
-                var scene = SceneManager.GetSceneAt(sceneIndex);
-                if (scene.isLoaded)
-                {
-                    yield return scene;
-                }
-            }
-        }
-
         private static bool IsLoaded(BaseScriptableSceneCollection collection)
         {
             var scriptableSceneIndices = collection.Scenes
@@ -272,10 +260,22 @@ namespace CHARK.ScriptableScenes.Utilities
 
             var uniqueScriptableSceneIndices = new HashSet<int>(scriptableSceneIndices);
 
-            var loadedSceneIndices = GetLoadedScenes().Select(scene => scene.buildIndex);
-            var uniqueLoadedSceneIndices = new HashSet<int>(loadedSceneIndices);
+            var validSceneIndices = GetValidScenes().Select(scene => scene.buildIndex);
+            var uniqueLoadedSceneIndices = new HashSet<int>(validSceneIndices);
 
             return uniqueScriptableSceneIndices.SetEquals(uniqueLoadedSceneIndices);
+        }
+
+        private static IEnumerable<Scene> GetValidScenes()
+        {
+            for (var sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
+            {
+                var scene = SceneManager.GetSceneAt(sceneIndex);
+                if (scene.IsValid())
+                {
+                    yield return scene;
+                }
+            }
         }
 
         #endregion

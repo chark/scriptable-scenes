@@ -564,6 +564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialCollection: {fileID: 11400000, guid: 29b938dba078c954bb3082acd12f028d, type: 2}
+  initialSceneLoadMode: 1
   collectionEvents:
     onLoadEntered:
       m_PersistentCalls:
@@ -578,6 +579,18 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     onUnloadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onShowTransitionEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onShowTransitionExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onHideTransitionEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onHideTransitionExited:
       m_PersistentCalls:
         m_Calls: []
   sceneEvents:

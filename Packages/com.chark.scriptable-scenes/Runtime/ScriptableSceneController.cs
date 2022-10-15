@@ -16,11 +16,27 @@ namespace CHARK.ScriptableScenes
     {
         #region Editor Fields
 
+        private enum SceneLoadMode
+        {
+            [Tooltip("Scenes will not be loaded automatically")]
+            None,
+
+            [Tooltip("Automatically load scenes in Awake")]
+            Awake,
+
+            [Tooltip("Automatically load scenes in Start")]
+            Start
+        }
+
         // ReSharper disable once NotAccessedField.Local
         [Header("Configuration")]
         [Tooltip("Scene collection which is first to be loaded when the game runs in build mode")]
         [SerializeField]
         private BaseScriptableSceneCollection initialCollection;
+
+        [Tooltip("Should and when " + nameof(initialCollection) + " be loaded?")]
+        [SerializeField]
+        private SceneLoadMode initialSceneLoadMode = SceneLoadMode.Start;
 
         [Header("Events")]
         [Tooltip("handler for global (invoked for all collections) collection events")]
@@ -63,40 +79,31 @@ namespace CHARK.ScriptableScenes
 
         #region Unity Lifecycle
 
-        private IEnumerator Start()
+        private void Awake()
         {
+            if (initialSceneLoadMode != SceneLoadMode.Awake)
+            {
+                return;
+            }
+
 #if UNITY_EDITOR
-            if (ScriptableSceneUtilities.TryGetSelectedCollection(out var selected))
-            {
-                yield return LoadSceneCollectionRoutine(selected);
-                yield break;
-            }
-
-            if (ScriptableSceneUtilities.TryGetLoadedCollection(out var loaded))
-            {
-                yield return LoadSceneCollectionRoutine(loaded);
-                yield break;
-            }
-
-            Debug.LogWarning(
-                $"Cannot load initial {nameof(BaseScriptableSceneCollection)}, make sure a valid " +
-                $"{nameof(BaseScriptableSceneCollection)} exists which matches currently loaded " +
-                $"scenes or use the Scene Manager Window",
-                this
-            );
-
+            LoadScriptableSceneCollection();
 #else
-            if (initialCollection == false)
+            LoadInitialSceneCollection();
+#endif
+        }
+
+        private void Start()
+        {
+            if (initialSceneLoadMode != SceneLoadMode.Start)
             {
-                Debug.LogWarning(
-                    $"{nameof(initialCollection)} is not set, initial scene setup will not be " +
-                    $"loaded",
-                    this
-                );
-                yield break;
+                return;
             }
 
-            yield return LoadSceneCollectionRoutine(initialCollection);
+#if UNITY_EDITOR
+            LoadScriptableSceneCollection();
+#else
+            LoadInitialSceneCollection();
 #endif
         }
 
@@ -155,6 +162,61 @@ namespace CHARK.ScriptableScenes
 
         #region Private Methods
 
+        /// <summary>
+        /// Load scene collection based on custom Scriptable Scene logic.
+        /// </summary>
+        private void LoadScriptableSceneCollection()
+        {
+            StartCoroutine(LoadScriptableSceneCollectionRoutine());
+        }
+
+        /// <summary>
+        /// Load scene collection specified in <see cref="initialCollection"/>.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local
+        private void LoadInitialSceneCollection()
+        {
+            StartCoroutine(LoadInitialSceneCollectionRoutine());
+        }
+
+        private IEnumerator LoadScriptableSceneCollectionRoutine()
+        {
+            if (ScriptableSceneUtilities.TryGetSelectedCollection(out var selected))
+            {
+                yield return LoadSceneCollectionRoutine(selected);
+                yield break;
+            }
+
+            if (ScriptableSceneUtilities.TryGetLoadedCollection(out var loaded))
+            {
+                yield return LoadSceneCollectionRoutine(loaded);
+                yield break;
+            }
+
+            Debug.LogWarning(
+                $"Cannot load initial {nameof(BaseScriptableSceneCollection)}, make sure a valid " +
+                $"{nameof(BaseScriptableSceneCollection)} exists which matches currently loaded " +
+                $"scenes or use the Scene Manager Window",
+                this
+            );
+        }
+
+        private IEnumerator LoadInitialSceneCollectionRoutine()
+        {
+            if (initialCollection == false)
+            {
+                Debug.LogWarning(
+                    $"{nameof(initialCollection)} is not set, initial scene setup will not be " +
+                    $"loaded",
+                    this
+                );
+
+                yield break;
+            }
+
+            yield return LoadSceneCollectionRoutine(initialCollection);
+        }
+
         private IEnumerator LoadSceneCollectionRoutine(BaseScriptableSceneCollection collection)
         {
             if (collection.SceneCount == 0)
@@ -182,11 +244,16 @@ namespace CHARK.ScriptableScenes
             loadingCollection = collection;
             IsLoading = true;
 
-            yield return LoadSceneCollectionInternalRoutine(collection);
-
-            loadingCollection = null;
-            loadedCollection = collection;
-            IsLoading = false;
+            try
+            {
+                yield return LoadSceneCollectionInternalRoutine(collection);
+                loadedCollection = collection;
+            }
+            finally
+            {
+                loadingCollection = null;
+                IsLoading = false;
+            }
         }
 
         private IEnumerator LoadSceneCollectionInternalRoutine(
