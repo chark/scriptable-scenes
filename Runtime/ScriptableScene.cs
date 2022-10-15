@@ -128,6 +128,17 @@ namespace CHARK.ScriptableScenes
 
         private IEnumerator LoadInternalRoutine()
         {
+            if (sceneBuildIndex < 0)
+            {
+                Debug.LogWarning(
+                    "Cannot load an invalid Scene Build Index. Make sure a Scene Asset is assigned, " +
+                    "ensure that the scene is added to project Build Settings and is enabled",
+                    this
+                );
+
+                yield break;
+            }
+
             var operation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
 
             while (operation.isDone == false)
@@ -142,12 +153,34 @@ namespace CHARK.ScriptableScenes
 
         private IEnumerator UnloadInternalRoutine()
         {
+            if (sceneBuildIndex < 0)
+            {
+                Debug.LogWarning(
+                    "Cannot unload invalid Scene Build Index. Make sure a Scene Asset is assigned, " +
+                    "ensure that the scene is added to project Build Settings and is enabled",
+                    this
+                );
+
+                yield break;
+            }
+
             yield return SceneManager.UnloadSceneAsync(sceneBuildIndex);
         }
 
         private void SetActiveInternal()
         {
             var scene = GetScene();
+            if (scene.IsValid() == false)
+            {
+                Debug.LogWarning(
+                    "Cannot activate an invalid scene. Make sure a Scene Asset is assigned, " +
+                    "ensure that the scene is added to project Build Settings and is enabled",
+                    this
+                );
+
+                return;
+            }
+
             SceneManager.SetActiveScene(scene);
         }
 
@@ -159,7 +192,17 @@ namespace CHARK.ScriptableScenes
 
         private Scene GetScene()
         {
-            return SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+            if (sceneBuildIndex >= 0)
+            {
+                return SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+            }
+
+            var invalidScene = new Scene
+            {
+                name = "Invalid Scene"
+            };
+
+            return invalidScene;
         }
 
         #endregion
