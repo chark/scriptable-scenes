@@ -87,20 +87,28 @@ namespace CHARK.ScriptableScenes.Editor
             var isEnabled = GUI.enabled;
             GUI.enabled = Application.isPlaying && isEnabled;
 
-            EditorGUILayout.BeginHorizontal();
+            // EditorGUILayout.BeginHorizontal(new GUIStyle
+            // {
+            //     alignment = TextAnchor.MiddleCenter
+            // });
 
             DrawStopGameButton();
             DrawPauseGameButton();
             DrawStepGameButton();
 
-            EditorGUILayout.EndHorizontal();
+            // EditorGUILayout.EndHorizontal();
 
             GUI.enabled = isEnabled;
         }
 
         private static void DrawStopGameButton()
         {
-            if (ScriptableSceneGUI.Button("Stop"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "PreMatQuad",
+                "Stop game"
+            );
+
+            if (ScriptableSceneGUI.Button(iconContent))
             {
                 ScriptableSceneEditorUtilities.StopGame();
             }
@@ -108,8 +116,13 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPauseGameButton()
         {
+            var iconContent = EditorGUIUtility.IconContent(
+                "PauseButton",
+                "Pause game"
+            );
+
             var isPausedOld = EditorApplication.isPaused;
-            var isPausedNew = ScriptableSceneGUI.Toggle(isPausedOld, "Pause", "Button");
+            var isPausedNew = ScriptableSceneGUI.Toggle(isPausedOld, iconContent, "Button");
             if (isPausedOld != isPausedNew)
             {
                 ScriptableSceneEditorUtilities.SetPausedGame(isPausedNew);
@@ -118,7 +131,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStepGameButton()
         {
-            if (ScriptableSceneGUI.Button("Step"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "StepButton",
+                "Step game forward by one frame"
+            );
+
+            if (ScriptableSceneGUI.Button(iconContent))
             {
                 ScriptableSceneEditorUtilities.StepGame();
             }
@@ -296,7 +314,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawOpenButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Open"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "Folder Icon",
+                "Open scene collection"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, iconContent))
             {
                 collection.Open();
             }
@@ -304,7 +327,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPlayButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Play"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "PlayButton",
+                "Run game in selected scene collection"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, iconContent))
             {
                 collection.Play();
             }
@@ -312,7 +340,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawLoadButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Load"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "SceneLoadIn",
+                "Load scene collection (runtime)"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, iconContent))
             {
                 collection.Load();
             }
@@ -322,7 +355,8 @@ namespace CHARK.ScriptableScenes.Editor
         {
             return new GUIStyle(EditorStyles.foldout)
             {
-                fontStyle = FontStyle.Bold
+                fontStyle = FontStyle.Bold,
+                clipping = TextClipping.Clip
             };
         }
 
