@@ -17,9 +17,14 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             return GUILayout.Toggle(isToggled, label, style);
         }
 
-        internal static bool Toggle(bool isToggled, GUIContent content, GUIStyle style)
+        internal static bool Toggle(
+            bool isToggled,
+            GUIContent content,
+            GUIStyle style,
+            params GUILayoutOption[] options
+        )
         {
-            return GUILayout.Toggle(isToggled, content, style);
+            return GUILayout.Toggle(isToggled, content, style, options);
         }
 
         internal static T ObjectField<T>(
@@ -60,9 +65,9 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             return GUI.Button(rect, text);
         }
 
-        internal static bool Button(GUIContent content)
+        internal static bool Button(GUIContent content, params GUILayoutOption[] options)
         {
-            return GUILayout.Button(content, GUILayout.Width(20f));
+            return GUILayout.Button(content, options);
         }
 
         internal static bool Button(string text)
