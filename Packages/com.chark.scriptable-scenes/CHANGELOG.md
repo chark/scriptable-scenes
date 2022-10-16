@@ -12,16 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 - Changed global control buttons to use icons in Scriptable Scene Manager.
 - Moved collection controls next to title in Scriptable Scene Manager.
-- Updated package.json with new version.
 
 ## [0.0.4] - 2022-10-16
 
 ### Added
 - Added more initial scene load options to `ScriptableSceneController`.
 - Added more guards when loading invalid scenes.
-
-### Changed
-- Updated package.json with new version.
 
 ### Fixed
 - `ScriptableSceneController` not cleaning up `IsLoading` and `loadingCollection` on exception.
