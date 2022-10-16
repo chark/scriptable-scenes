@@ -22,12 +22,17 @@ namespace CHARK.ScriptableScenes.Editor
 
         #region Private Fields
 
+        private static readonly GUILayoutOption PlayModeButtonWidth = GUILayout.Width(30f);
+
         private const float CollectionListFieldMargin = 2f;
         private const float CollectionListMargin = 8f;
         private const float CollectionListControlsExtraMargin = 2f;
-        private const float CollectionListControlButtonMargin = 9f;
+        private const float CollectionListControlButtonWidth = 50f;
 
-        private const int CollectionFieldCount = 4;
+        private const float CollectionListControlsWidth =
+            CollectionListControlButtonWidth * 3f + CollectionListControlsExtraMargin * 2f;
+
+        private const int CollectionFieldCount = 3;
 
         private List<BaseScriptableSceneCollection> sceneCollections;
         private ReorderableList sceneCollectionsList;
@@ -88,11 +93,13 @@ namespace CHARK.ScriptableScenes.Editor
             GUI.enabled = Application.isPlaying && isEnabled;
 
             EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
 
             DrawStopGameButton();
             DrawPauseGameButton();
             DrawStepGameButton();
 
+            GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
 
             GUI.enabled = isEnabled;
@@ -100,7 +107,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStopGameButton()
         {
-            if (ScriptableSceneGUI.Button("Stop"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "PreMatQuad",
+                "Stop game"
+            );
+
+            if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
             {
                 ScriptableSceneEditorUtilities.StopGame();
             }
@@ -108,8 +120,19 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPauseGameButton()
         {
+            var iconContent = EditorGUIUtility.IconContent(
+                "PauseButton",
+                "Pause game"
+            );
+
             var isPausedOld = EditorApplication.isPaused;
-            var isPausedNew = ScriptableSceneGUI.Toggle(isPausedOld, "Pause", "Button");
+            var isPausedNew = ScriptableSceneGUI.Toggle(
+                isPausedOld,
+                iconContent,
+                "Button",
+                PlayModeButtonWidth
+            );
+
             if (isPausedOld != isPausedNew)
             {
                 ScriptableSceneEditorUtilities.SetPausedGame(isPausedNew);
@@ -118,7 +141,12 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStepGameButton()
         {
-            if (ScriptableSceneGUI.Button("Step"))
+            var iconContent = EditorGUIUtility.IconContent(
+                "StepButton",
+                "Step game forward by one frame"
+            );
+
+            if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
             {
                 ScriptableSceneEditorUtilities.StepGame();
             }
@@ -166,12 +194,14 @@ namespace CHARK.ScriptableScenes.Editor
                 drawElementCallback = OnDrawElement
             };
 
+            // ReSharper disable once InconsistentNaming
             float OnGetElementHeight(int index)
             {
                 var collection = collections[index];
                 return GetElementHeight(collection);
             }
 
+            // ReSharper disable once InconsistentNaming
             void OnReorder(ReorderableList reorderableList)
             {
                 for (var index = 0; index < collections.Count; index++)
@@ -181,6 +211,7 @@ namespace CHARK.ScriptableScenes.Editor
                 }
             }
 
+            // ReSharper disable once InconsistentNaming
             void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
             {
                 var collection = collections[index];
@@ -233,30 +264,11 @@ namespace CHARK.ScriptableScenes.Editor
             fieldRect.y += fieldYOffset;
             DrawSceneCountField(fieldRect, collection);
 
-            fieldRect.y += fieldYOffset + CollectionListControlsExtraMargin;
-            DrawControls(EditorGUI.IndentedRect(fieldRect), collection);
+            // TODO: unsure if wanna show controls inside the foldout or next to it.
+            // fieldRect.y += fieldYOffset + CollectionListControlsExtraMargin;
+            // DrawControls(EditorGUI.IndentedRect(fieldRect), collection);
 
             EditorGUI.indentLevel--;
-        }
-
-        private static void DrawControls(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var isAddedScenes = collection.Scenes.Any();
-            var isEnabled = GUI.enabled;
-
-            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying == false;
-
-            rect.width = rect.width / 3f - CollectionListControlButtonMargin / 3f;
-            DrawOpenButton(rect, collection);
-
-            rect.x += rect.width + CollectionListControlButtonMargin / 2f;
-            DrawPlayButton(rect, collection);
-
-            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying;
-            rect.x += rect.width + CollectionListControlButtonMargin / 2f;
-            DrawLoadButton(rect, collection);
-
-            GUI.enabled = isEnabled;
         }
 
         private static bool DrawTitle(Rect rect, BaseScriptableSceneCollection collection)
@@ -269,7 +281,12 @@ namespace CHARK.ScriptableScenes.Editor
             EditorGUI.BeginChangeCheck();
 
             var style = GetFoldoutTitleStyle();
+
+            rect.width -= CollectionListControlsWidth;
             isExpanded = EditorGUI.Foldout(rect, isExpanded, prettyName, true, style);
+
+            rect.x += rect.width;
+            DrawControls(rect, collection);
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -277,6 +294,27 @@ namespace CHARK.ScriptableScenes.Editor
             }
 
             return isExpanded;
+        }
+
+        private static void DrawControls(Rect rect, BaseScriptableSceneCollection collection)
+        {
+            var isAddedScenes = collection.Scenes.Any();
+            var isEnabled = GUI.enabled;
+
+            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying == false;
+
+            rect.width = CollectionListControlButtonWidth;
+            DrawOpenButton(rect, collection);
+
+            rect.x += CollectionListControlButtonWidth + CollectionListControlsExtraMargin;
+            DrawPlayButton(rect, collection);
+
+            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying;
+
+            rect.x += CollectionListControlButtonWidth + CollectionListControlsExtraMargin;
+            DrawLoadButton(rect, collection);
+
+            GUI.enabled = isEnabled;
         }
 
         private static void DrawAssetField(Rect rect, BaseScriptableSceneCollection collection)
@@ -296,7 +334,18 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawOpenButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Open"))
+            // TODO: unsure if wanna use icons or not
+            // var iconContent = EditorGUIUtility.IconContent(
+            //     "Folder Icon",
+            //     "Open scene collection"
+            // );
+
+            var content = new GUIContent(
+                "Open",
+                "Open all scenes in selected Scene Collection"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, content))
             {
                 collection.Open();
             }
@@ -304,7 +353,17 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPlayButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Play"))
+            // var iconContent = EditorGUIUtility.IconContent(
+            //     "PlayButton",
+            //     "Run game in selected scene collection"
+            // );
+
+            var content = new GUIContent(
+                "Play",
+                "Play the game in selected Scene Collection"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, content))
             {
                 collection.Play();
             }
@@ -312,7 +371,17 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawLoadButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            if (ScriptableSceneGUI.Button(rect, "Load"))
+            // var iconContent = EditorGUIUtility.IconContent(
+            //     "SceneLoadIn",
+            //     "Load scene collection (runtime)"
+            // );
+
+            var content = new GUIContent(
+                "Load",
+                "Load scene collection through the Scene Controller (runtime)"
+            );
+
+            if (ScriptableSceneGUI.Button(rect, content))
             {
                 collection.Load();
             }
