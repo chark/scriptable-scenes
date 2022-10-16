@@ -55,6 +55,14 @@ namespace CHARK.ScriptableScenes
 
         public override int SceneBuildIndex => sceneBuildIndex;
 
+        private bool IsLoaded()
+        {
+            var scene = GetScene();
+            var isLoaded = scene.isLoaded;
+
+            return isLoaded;
+        }
+
         public override string ScenePath => scenePath;
 
         public override bool IsActivate => isActivate;
@@ -131,8 +139,9 @@ namespace CHARK.ScriptableScenes
             if (sceneBuildIndex < 0)
             {
                 Debug.LogWarning(
-                    "Cannot load an invalid Scene Build Index. Make sure a Scene Asset is assigned, " +
-                    "ensure that the scene is added to project Build Settings and is enabled",
+                    "Cannot load scene - invalid Scene Build Index. Make sure a Scene Asset is " +
+                    "assigned, ensure that the scene is added to project Build Settings and is " +
+                    "enabled",
                     this
                 );
 
@@ -156,8 +165,9 @@ namespace CHARK.ScriptableScenes
             if (sceneBuildIndex < 0)
             {
                 Debug.LogWarning(
-                    "Cannot unload invalid Scene Build Index. Make sure a Scene Asset is assigned, " +
-                    "ensure that the scene is added to project Build Settings and is enabled",
+                    "Cannot unload scene - invalid Scene Build Index. Make sure a Scene Asset is " +
+                    "assigned, ensure that the scene is added to project Build Settings and is " +
+                    "enabled",
                     this
                 );
 
@@ -173,8 +183,9 @@ namespace CHARK.ScriptableScenes
             if (scene.IsValid() == false)
             {
                 Debug.LogWarning(
-                    "Cannot activate an invalid scene. Make sure a Scene Asset is assigned, " +
-                    "ensure that the scene is added to project Build Settings and is enabled",
+                    "Cannot activate scene - scene is invalid. Make sure a Scene Asset is " +
+                    "assigned, ensure that the scene is added to project Build Settings and is " +
+                    "enabled",
                     this
                 );
 
@@ -182,12 +193,6 @@ namespace CHARK.ScriptableScenes
             }
 
             SceneManager.SetActiveScene(scene);
-        }
-
-        private bool IsLoaded()
-        {
-            var scene = GetScene();
-            return scene.isLoaded;
         }
 
         private Scene GetScene()

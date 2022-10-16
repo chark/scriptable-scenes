@@ -200,6 +200,58 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             EditorPrefs.SetBool(key, isExpanded);
         }
 
+        internal static Texture GetBuildStatusIcon(this BaseScriptableSceneCollection collection)
+        {
+            if (collection.IsAddedToBuildSettings())
+            {
+                return GetBuildStatusSuccessIcon();
+            }
+
+            return GetBuildStatusWarningIcon();
+        }
+
+        internal static Texture GetBuildStatusIcon(this BaseScriptableScene scene)
+        {
+            if (scene.IsAddedToBuildSettings())
+            {
+                return GetBuildStatusSuccessIcon();
+            }
+
+            return GetBuildStatusWarningIcon();
+        }
+
+        internal static bool IsAddedToBuildSettings(this BaseScriptableSceneCollection collection)
+        {
+            var scenes = collection.Scenes;
+            foreach (var scene in scenes)
+            {
+                if (IsAddedToBuildSettings(scene) == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        internal static bool IsAddedToBuildSettings(this BaseScriptableScene scene)
+        {
+            var scenePath = scene.ScenePath;
+            var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
+
+            return buildIndex >= 0;
+        }
+
+        internal static Texture GetBuildStatusSuccessIcon()
+        {
+            return GetIcon("P4_CheckOutRemote@2x");
+        }
+
+        internal static Texture GetBuildStatusWarningIcon()
+        {
+            return GetIcon("P4_OutOfSync@2x");
+        }
+
         #endregion
 
         #region Private Methods
@@ -231,6 +283,14 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             var target = collection.Guid;
 
             return $"{prefix}_{function}_{target}";
+        }
+
+        private static Texture GetIcon(string iconName)
+        {
+            var iconContent = EditorGUIUtility.IconContent(iconName);
+            var iconImage = iconContent.image;
+
+            return iconImage;
         }
 
         #endregion
