@@ -24,13 +24,17 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static readonly GUILayoutOption PlayModeButtonWidth = GUILayout.Width(30f);
 
-        private const float CollectionListFieldMargin = 2f;
-        private const float CollectionListMargin = 8f;
-        private const float CollectionListControlsExtraMargin = 2f;
-        private const float CollectionListControlButtonWidth = 50f;
+        private const float CollectionFieldMargin = 2f;
+        private const float CollectionMargin = 8f;
 
-        private const float CollectionListControlsWidth =
-            CollectionListControlButtonWidth * 3f + CollectionListControlsExtraMargin * 2f;
+        private const float CollectionTitleStatusWidth = 20f;
+        private const float CollectionTitleButtonMargin = 2f;
+        private const float CollectionTitleButtonWidth = 40f;
+
+        private const float CollectionTitleActionsWidth =
+            CollectionTitleStatusWidth +
+            CollectionTitleButtonWidth * 3f +
+            CollectionTitleButtonMargin * 2f;
 
         private const int CollectionFieldCount = 3;
 
@@ -107,6 +111,7 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStopGameButton()
         {
+            // TODO: use scene utils.
             var iconContent = EditorGUIUtility.IconContent(
                 "PreMatQuad",
                 "Stop game"
@@ -120,6 +125,7 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPauseGameButton()
         {
+            // TODO: use scene utils.
             var iconContent = EditorGUIUtility.IconContent(
                 "PauseButton",
                 "Pause game"
@@ -141,6 +147,7 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStepGameButton()
         {
+            // TODO: use scene utils.
             var iconContent = EditorGUIUtility.IconContent(
                 "StepButton",
                 "Step game forward by one frame"
@@ -226,13 +233,13 @@ namespace CHARK.ScriptableScenes.Editor
             var isExpanded = collection.IsExpanded();
             if (isExpanded == false)
             {
-                return EditorGUIUtility.singleLineHeight + CollectionListFieldMargin;
+                return EditorGUIUtility.singleLineHeight + CollectionFieldMargin;
             }
 
-            return (EditorGUIUtility.singleLineHeight + CollectionListFieldMargin)
+            return (EditorGUIUtility.singleLineHeight + CollectionFieldMargin)
                    * CollectionFieldCount
-                   + CollectionListControlsExtraMargin
-                   + CollectionListMargin;
+                   + CollectionTitleButtonMargin
+                   + CollectionMargin;
         }
 
         private static void UpdateDisplayOrder(BaseScriptableSceneCollection collection, int index)
@@ -247,7 +254,7 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawSceneCollection(Rect rect, BaseScriptableSceneCollection collection)
         {
-            var fieldYOffset = EditorGUIUtility.singleLineHeight + CollectionListFieldMargin;
+            var fieldYOffset = EditorGUIUtility.singleLineHeight + CollectionFieldMargin;
             var fieldRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
 
             var isExpanded = DrawTitle(fieldRect, collection);
@@ -282,10 +289,13 @@ namespace CHARK.ScriptableScenes.Editor
 
             var style = GetFoldoutTitleStyle();
 
-            rect.width -= CollectionListControlsWidth;
+            rect.width -= CollectionTitleActionsWidth;
             isExpanded = EditorGUI.Foldout(rect, isExpanded, prettyName, true, style);
 
             rect.x += rect.width;
+            DrawStatusIndicator(rect, collection);
+
+            rect.x += CollectionTitleStatusWidth;
             DrawControls(rect, collection);
 
             if (EditorGUI.EndChangeCheck())
@@ -296,6 +306,19 @@ namespace CHARK.ScriptableScenes.Editor
             return isExpanded;
         }
 
+        private static void DrawStatusIndicator(Rect rect, BaseScriptableSceneCollection collection)
+        {
+            var icon = collection.GetBuildStatusIcon();
+            var tooltip = collection.IsAddedToBuildSettings()
+                ? "All scenes in this collection are added to Build Settings"
+                : "One of the scenes in this collection are missing from Build Settings";
+
+            var content = new GUIContent(icon, tooltip);
+
+            rect.width = CollectionTitleStatusWidth;
+            ScriptableSceneGUI.LabelField(rect, content);
+        }
+
         private static void DrawControls(Rect rect, BaseScriptableSceneCollection collection)
         {
             var isAddedScenes = collection.Scenes.Any();
@@ -303,15 +326,15 @@ namespace CHARK.ScriptableScenes.Editor
 
             GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying == false;
 
-            rect.width = CollectionListControlButtonWidth;
+            rect.width = CollectionTitleButtonWidth;
             DrawOpenButton(rect, collection);
 
-            rect.x += CollectionListControlButtonWidth + CollectionListControlsExtraMargin;
+            rect.x += CollectionTitleButtonWidth + CollectionTitleButtonMargin;
             DrawPlayButton(rect, collection);
 
             GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying;
 
-            rect.x += CollectionListControlButtonWidth + CollectionListControlsExtraMargin;
+            rect.x += CollectionTitleButtonWidth + CollectionTitleButtonMargin;
             DrawLoadButton(rect, collection);
 
             GUI.enabled = isEnabled;

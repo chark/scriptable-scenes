@@ -12,6 +12,11 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
     {
         #region Internal Methods
 
+        internal static void WarningHelpBox(string message)
+        {
+            EditorGUILayout.HelpBox(message, MessageType.Warning);
+        }
+
         internal static bool Toggle(bool isToggled, string label, GUIStyle style)
         {
             return GUILayout.Toggle(isToggled, label, style);
@@ -25,6 +30,22 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         )
         {
             return GUILayout.Toggle(isToggled, content, style, options);
+        }
+
+        internal static T ObjectField<T>(
+            string label,
+            T @object,
+            bool isAllowSceneObjects
+        ) where T : Object
+        {
+            var result = EditorGUILayout.ObjectField(
+                label,
+                @object,
+                typeof(T),
+                isAllowSceneObjects
+            );
+
+            return (T)result;
         }
 
         internal static T ObjectField<T>(
@@ -42,12 +63,22 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
                 isAllowSceneObjects
             );
 
-            return (T) result;
+            return (T)result;
+        }
+
+        internal static void LabelField(GUIContent content, GUIStyle style)
+        {
+            EditorGUILayout.LabelField(content, style);
         }
 
         internal static void LabelField(string label, GUIStyle style)
         {
             EditorGUILayout.LabelField(label, style);
+        }
+
+        internal static void LabelField(Rect rect, GUIContent label)
+        {
+            EditorGUI.LabelField(rect, label);
         }
 
         internal static int IntField(Rect rect, GUIContent label, int value)
