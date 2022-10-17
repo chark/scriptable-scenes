@@ -12,6 +12,17 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
     {
         #region Internal Methods
 
+        internal static bool Foldout(Rect rect, bool isExpanded, string text, GUIStyle style)
+        {
+            return EditorGUI.Foldout(
+                rect,
+                isExpanded,
+                text,
+                true,
+                style
+            );
+        }
+
         internal static void WarningHelpBox(string message)
         {
             EditorGUILayout.HelpBox(message, MessageType.Warning);

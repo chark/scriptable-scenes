@@ -242,6 +242,22 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             return buildIndex >= 0;
         }
 
+        internal static Texture GetStopButtonIcon()
+        {
+            return GetIcon("PreMatQuad");
+        }
+
+        internal static Texture GetPauseButtonIcon()
+        {
+            return GetIcon("PauseButton");
+        }
+
+        internal static Texture GetStepButtonIcon()
+        {
+            return GetIcon("StepButton");
+        }
+
+
         internal static Texture GetBuildStatusSuccessIcon()
         {
             return GetIcon("P4_CheckOutRemote@2x");

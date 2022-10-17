@@ -111,11 +111,8 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawStopGameButton()
         {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "PreMatQuad",
-                "Stop game"
-            );
+            var icon = ScriptableSceneEditorUtilities.GetStopButtonIcon();
+            var iconContent = new GUIContent(icon, "Stop Game");
 
             if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
             {
@@ -125,33 +122,28 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPauseGameButton()
         {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "PauseButton",
-                "Pause game"
-            );
+            var icon = ScriptableSceneEditorUtilities.GetPauseButtonIcon();
+            var iconContent = new GUIContent(icon, "Pause Game");
 
-            var isPausedOld = EditorApplication.isPaused;
-            var isPausedNew = ScriptableSceneGUI.Toggle(
-                isPausedOld,
+            EditorGUI.BeginChangeCheck();
+
+            var isPaused = ScriptableSceneGUI.Toggle(
+                EditorApplication.isPaused,
                 iconContent,
                 "Button",
                 PlayModeButtonWidth
             );
 
-            if (isPausedOld != isPausedNew)
+            if (EditorGUI.EndChangeCheck())
             {
-                ScriptableSceneEditorUtilities.SetPausedGame(isPausedNew);
+                ScriptableSceneEditorUtilities.SetPausedGame(isPaused);
             }
         }
 
         private static void DrawStepGameButton()
         {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "StepButton",
-                "Step game forward by one frame"
-            );
+            var icon = ScriptableSceneEditorUtilities.GetStepButtonIcon();
+            var iconContent = new GUIContent(icon, "Step one frame");
 
             if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
             {
@@ -271,26 +263,24 @@ namespace CHARK.ScriptableScenes.Editor
             fieldRect.y += fieldYOffset;
             DrawSceneCountField(fieldRect, collection);
 
-            // TODO: unsure if wanna show controls inside the foldout or next to it.
-            // fieldRect.y += fieldYOffset + CollectionListControlsExtraMargin;
-            // DrawControls(EditorGUI.IndentedRect(fieldRect), collection);
-
             EditorGUI.indentLevel--;
         }
 
         private static bool DrawTitle(Rect rect, BaseScriptableSceneCollection collection)
         {
-            var name = collection.Name;
-            var prettyName = ObjectNames.NicifyVariableName(name);
-
-            var isExpanded = collection.IsExpanded();
-
             EditorGUI.BeginChangeCheck();
 
-            var style = GetFoldoutTitleStyle();
+            var titleTextWidth = rect.width - CollectionTitleActionsWidth;
+            var titleText = ObjectNames.NicifyVariableName(collection.Name);
+            var titleStyle = GetFoldoutTitleStyle(titleTextWidth);
 
-            rect.width -= CollectionTitleActionsWidth;
-            isExpanded = EditorGUI.Foldout(rect, isExpanded, prettyName, true, style);
+            rect.width = titleTextWidth;
+            var isExpanded = ScriptableSceneGUI.Foldout(
+                rect,
+                collection.IsExpanded(),
+                titleText,
+                titleStyle
+            );
 
             rect.x += rect.width;
             DrawStatusIndicator(rect, collection);
@@ -324,7 +314,9 @@ namespace CHARK.ScriptableScenes.Editor
             var isAddedScenes = collection.Scenes.Any();
             var isEnabled = GUI.enabled;
 
-            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying == false;
+            GUI.enabled = isEnabled
+                          && isAddedScenes
+                          && EditorApplication.isPlayingOrWillChangePlaymode == false;
 
             rect.width = CollectionTitleButtonWidth;
             DrawOpenButton(rect, collection);
@@ -357,12 +349,6 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawOpenButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            // TODO: unsure if wanna use icons or not
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "Folder Icon",
-            //     "Open scene collection"
-            // );
-
             var content = new GUIContent(
                 "Open",
                 "Open all scenes in selected Scene Collection"
@@ -376,11 +362,6 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawPlayButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "PlayButton",
-            //     "Run game in selected scene collection"
-            // );
-
             var content = new GUIContent(
                 "Play",
                 "Play the game in selected Scene Collection"
@@ -394,11 +375,6 @@ namespace CHARK.ScriptableScenes.Editor
 
         private static void DrawLoadButton(Rect rect, BaseScriptableSceneCollection collection)
         {
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "SceneLoadIn",
-            //     "Load scene collection (runtime)"
-            // );
-
             var content = new GUIContent(
                 "Load",
                 "Load scene collection through the Scene Controller (runtime)"
@@ -410,11 +386,13 @@ namespace CHARK.ScriptableScenes.Editor
             }
         }
 
-        private static GUIStyle GetFoldoutTitleStyle()
+        private static GUIStyle GetFoldoutTitleStyle(float width)
         {
             return new GUIStyle(EditorStyles.foldout)
             {
-                fontStyle = FontStyle.Bold
+                fontStyle = FontStyle.Bold,
+                clipping = TextClipping.Clip,
+                fixedWidth = width
             };
         }
 
