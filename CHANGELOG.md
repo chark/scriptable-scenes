@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 - Scenes not added to build settings can now be Opened, Loaded and Activated in Editor. In Player, a warning will be printed for such scenes.
-- Removed `BuildIndex` from `BaseScriptableScene` (want to hide it),
+- Removed `BuildIndex` from `BaseScriptableScene` (want to hide it).
 
 ## [0.0.6] - 2022-10-17
 
