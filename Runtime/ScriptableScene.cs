@@ -18,23 +18,18 @@ namespace CHARK.ScriptableScenes
     {
         #region Editor Fields
 
-        [Header("Internal")]
-        [ReadOnly]
-        [Tooltip("Build index of the scene")]
+#if UNITY_EDITOR
+        [Header("Scene")]
         [SerializeField]
-        private int sceneBuildIndex;
+        private UnityEditor.SceneAsset sceneAsset;
+#endif
 
         [ReadOnly]
         [Tooltip("Path to the scene asset")]
         [SerializeField]
         private string scenePath;
 
-#if UNITY_EDITOR
         [Header("Configuration")]
-        [SerializeField]
-        private UnityEditor.SceneAsset sceneAsset;
-#endif
-
         [Tooltip("Should this scene be activated on load?")]
         [SerializeField]
         private bool isActivate;
@@ -51,17 +46,7 @@ namespace CHARK.ScriptableScenes
 
         #region Public Properties
 
-        public override ISceneEventHandler SceneEvents => sceneEvents;
-
-        public override int SceneBuildIndex => sceneBuildIndex;
-
-        private bool IsLoaded()
-        {
-            var scene = GetScene();
-            var isLoaded = scene.isLoaded;
-
-            return isLoaded;
-        }
+        public override string Name => name;
 
         public override string ScenePath => scenePath;
 
@@ -69,7 +54,11 @@ namespace CHARK.ScriptableScenes
 
         public override bool IsPersist => isPersist;
 
-        public override string Name => name;
+        public override bool IsLoaded => GetScene().isLoaded;
+
+        public override bool IsValid => GetScene().IsValid();
+
+        public override ISceneEventHandler SceneEvents => sceneEvents;
 
         #endregion
 
@@ -84,10 +73,9 @@ namespace CHARK.ScriptableScenes
         public void OnBeforeSerialize()
         {
 #if UNITY_EDITOR
-            if (sceneAsset.TryGetSceneDetails(out var newScenePath, out var newSceneBuildIndex))
+            if (sceneAsset.TryGetSceneDetails(out var newScenePath, out _))
             {
                 scenePath = newScenePath;
-                sceneBuildIndex = newSceneBuildIndex;
             }
 #endif
         }
@@ -104,9 +92,28 @@ namespace CHARK.ScriptableScenes
         {
             sceneEvents.RaiseLoadEntered(this);
 
-            if (IsLoaded() == false)
+            if (IsLoaded == false)
             {
+#if UNITY_EDITOR
+                // When scenes are loaded in Editor, in some cases we might want to load a
+                // scene which is not added to build settings (e.g., during testing). So all checks
+                // are ignored in this case.
                 yield return LoadInternalRoutine();
+#else
+                // In the player, checking (not IsValid) by build since the scene might not be
+                // loaded yet.
+                if (IsValidBuildIndex())
+                {
+                    yield return LoadInternalRoutine();
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        $"Cannot load scene - invalid Scene at path \"{scenePath}\"",
+                        this
+                    );
+                }
+#endif
             }
             else
             {
@@ -119,15 +126,58 @@ namespace CHARK.ScriptableScenes
         public override IEnumerator UnloadRoutine()
         {
             sceneEvents.RaiseUnloadEntered(this);
-            yield return UnloadInternalRoutine();
+            if (IsLoaded)
+            {
+#if UNITY_EDITOR
+                // Same as with scene loading, in Editor we want to unload even invalid scenes.
+                yield return UnloadInternalRoutine();
+#else
+                // IsValid can be called as the scene had to be loaded to get to this point.
+                if (IsValid)
+                {
+                    yield return UnloadInternalRoutine();
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        $"Cannot unload scene - invalid Scene at path \"{scenePath}\"",
+                        this
+                    );
+                }
+#endif
+            }
+
             sceneEvents.RaiseUnloadExited(this);
         }
 
         public override void SetActive()
         {
             sceneEvents.RaiseActivateEntered(this);
+#if UNITY_EDITOR
+            // Same as with scene loading, in Editor we want to activate invalid scenes.
             SetActiveInternal();
+#else
+            // In Player at this point the scene should have been loaded and we can call IsValid.
+            if (IsValid)
+            {
+                SetActiveInternal();
+            }
+            else
+            {
+                Debug.LogWarning(
+                    $"Cannot activate scene - invalid Scene at path \"{scenePath}\"",
+                    this
+                );
+            }
+#endif
+
             sceneEvents.RaiseActivateExited(this);
+        }
+
+        public override bool Equals(Scene otherScene)
+        {
+            var scene = GetScene();
+            return scene == otherScene;
         }
 
         #endregion
@@ -136,19 +186,20 @@ namespace CHARK.ScriptableScenes
 
         private IEnumerator LoadInternalRoutine()
         {
-            if (sceneBuildIndex < 0)
+            var operation = StartLoadSceneOperation();
+
+            AsyncOperation StartLoadSceneOperation()
             {
-                Debug.LogWarning(
-                    "Cannot load scene - invalid Scene Build Index. Make sure a Scene Asset is " +
-                    "assigned, ensure that the scene is added to project Build Settings and is " +
-                    "enabled",
-                    this
-                );
+                var parameters = new LoadSceneParameters(LoadSceneMode.Additive);
 
-                yield break;
+#if UNITY_EDITOR
+                // Allow to load scenes which are not added to Build Settings (Editor only).
+                return UnityEditor.SceneManagement.EditorSceneManager
+                    .LoadSceneAsyncInPlayMode(scenePath, parameters);
+#else
+                return SceneManager.LoadSceneAsync(scenePath, parameters);
+#endif
             }
-
-            var operation = SceneManager.LoadSceneAsync(sceneBuildIndex, LoadSceneMode.Additive);
 
             while (operation.isDone == false)
             {
@@ -162,52 +213,25 @@ namespace CHARK.ScriptableScenes
 
         private IEnumerator UnloadInternalRoutine()
         {
-            if (sceneBuildIndex < 0)
-            {
-                Debug.LogWarning(
-                    "Cannot unload scene - invalid Scene Build Index. Make sure a Scene Asset is " +
-                    "assigned, ensure that the scene is added to project Build Settings and is " +
-                    "enabled",
-                    this
-                );
-
-                yield break;
-            }
-
-            yield return SceneManager.UnloadSceneAsync(sceneBuildIndex);
+            yield return SceneManager.UnloadSceneAsync(scenePath);
         }
 
         private void SetActiveInternal()
         {
-            var scene = GetScene();
-            if (scene.IsValid() == false)
-            {
-                Debug.LogWarning(
-                    "Cannot activate scene - scene is invalid. Make sure a Scene Asset is " +
-                    "assigned, ensure that the scene is added to project Build Settings and is " +
-                    "enabled",
-                    this
-                );
-
-                return;
-            }
-
-            SceneManager.SetActiveScene(scene);
+            var sceneByPath = SceneManager.GetSceneByPath(scenePath);
+            SceneManager.SetActiveScene(sceneByPath);
         }
+
+#if UNITY_EDITOR == false
+        private bool IsValidBuildIndex()
+        {
+            return SceneUtility.GetBuildIndexByScenePath(scenePath) >= 0;
+        }
+#endif
 
         private Scene GetScene()
         {
-            if (sceneBuildIndex >= 0)
-            {
-                return SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
-            }
-
-            var invalidScene = new Scene
-            {
-                name = "Invalid Scene"
-            };
-
-            return invalidScene;
+            return SceneManager.GetSceneByPath(scenePath);
         }
 
         #endregion

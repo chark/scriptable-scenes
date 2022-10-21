@@ -23,11 +23,6 @@ namespace CHARK.ScriptableScenes
         public abstract string ScenePath { get; }
 
         /// <summary>
-        /// Scene build index.
-        /// </summary>
-        public abstract int SceneBuildIndex { get; }
-
-        /// <summary>
         /// Should this scene be activated after loading.
         /// </summary>
         public abstract bool IsActivate { get; }
@@ -36,6 +31,16 @@ namespace CHARK.ScriptableScenes
         /// Should this scene persist between scene loads (never unloaded, useful for setup scenes).
         /// </summary>
         public abstract bool IsPersist { get; }
+
+        /// <summary>
+        /// <c>true</c> if this scene is currently loaded or <c>false</c> otherwise.
+        /// </summary>
+        public abstract bool IsLoaded { get; }
+
+        /// <summary>
+        /// <c>true</c> if this scene is valid or <c>false</c> otherwise.
+        /// </summary>
+        public abstract bool IsValid { get; }
 
         /// <summary>
         /// Event handler assigned to this scene.
@@ -60,6 +65,11 @@ namespace CHARK.ScriptableScenes
         /// Activate this scene via <see cref="SceneManager.SetActiveScene"/>.
         /// </summary>
         public abstract void SetActive();
+
+        /// <returns>
+        /// <c>true</c> if this Scriptable Scene is pointing to <paramref name="otherScene"/>.
+        /// </returns>
+        public abstract bool Equals(Scene otherScene);
 
         #endregion
     }

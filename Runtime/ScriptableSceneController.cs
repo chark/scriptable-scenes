@@ -19,6 +19,7 @@ namespace CHARK.ScriptableScenes
         private enum SceneLoadMode
         {
             [Tooltip("Scenes will not be loaded automatically")]
+            // ReSharper disable once UnusedMember.Local
             None,
 
             [Tooltip("Automatically load scenes in Awake")]
@@ -87,7 +88,7 @@ namespace CHARK.ScriptableScenes
             }
 
 #if UNITY_EDITOR
-            LoadScriptableSceneCollection();
+            LoadSelectedOrOpenedCollection();
 #else
             LoadInitialSceneCollection();
 #endif
@@ -101,7 +102,7 @@ namespace CHARK.ScriptableScenes
             }
 
 #if UNITY_EDITOR
-            LoadScriptableSceneCollection();
+            LoadSelectedOrOpenedCollection();
 #else
             LoadInitialSceneCollection();
 #endif
@@ -162,24 +163,13 @@ namespace CHARK.ScriptableScenes
 
         #region Private Methods
 
-        /// <summary>
-        /// Load scene collection based on custom Scriptable Scene logic.
-        /// </summary>
-        private void LoadScriptableSceneCollection()
+#if UNITY_EDITOR
+        private void LoadSelectedOrOpenedCollection()
         {
-            StartCoroutine(LoadScriptableSceneCollectionRoutine());
+            StartCoroutine(LoadSelectedOrOpenedCollectionRoutine());
         }
 
-        /// <summary>
-        /// Load scene collection specified in <see cref="initialCollection"/>.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private void LoadInitialSceneCollection()
-        {
-            StartCoroutine(LoadInitialSceneCollectionRoutine());
-        }
-
-        private IEnumerator LoadScriptableSceneCollectionRoutine()
+        private IEnumerator LoadSelectedOrOpenedCollectionRoutine()
         {
             if (ScriptableSceneUtilities.TryGetSelectedCollection(out var selected))
             {
@@ -187,18 +177,23 @@ namespace CHARK.ScriptableScenes
                 yield break;
             }
 
-            if (ScriptableSceneUtilities.TryGetLoadedCollection(out var loaded))
+            if (ScriptableSceneUtilities.TryGetOpenCollection(out var open))
             {
-                yield return LoadSceneCollectionRoutine(loaded);
+                yield return LoadSceneCollectionRoutine(open);
                 yield break;
             }
 
             Debug.LogWarning(
                 $"Cannot load initial {nameof(BaseScriptableSceneCollection)}, make sure a valid " +
                 $"{nameof(BaseScriptableSceneCollection)} exists which matches currently loaded " +
-                $"scenes or use the Scene Manager Window",
+                $"scenes, or use the Scene Manager Window",
                 this
             );
+        }
+#else
+        private void LoadInitialSceneCollection()
+        {
+            StartCoroutine(LoadInitialSceneCollectionRoutine());
         }
 
         private IEnumerator LoadInitialSceneCollectionRoutine()
@@ -216,6 +211,7 @@ namespace CHARK.ScriptableScenes
 
             yield return LoadSceneCollectionRoutine(initialCollection);
         }
+#endif
 
         private IEnumerator LoadSceneCollectionRoutine(BaseScriptableSceneCollection collection)
         {

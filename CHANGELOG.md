@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2022-10-22
+
+### Added
+- More properties to `BaseScriptableScene` and `ScriptableScene`.
+
+### Changed
+- Scenes not added to build settings can now be Opened, Loaded and Activated in Editor. In Player, a warning will be printed for such scenes.
+- Removed `BuildIndex` from `BaseScriptableScene` (want to hide it),
+
 ## [0.0.6] - 2022-10-17
 
 ### Added
