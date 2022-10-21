@@ -12,8 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: PlayScriptableScene
   m_EditorClassIdentifier: 
-  sceneBuildIndex: 2
-  scenePath: Assets/Scenes/PlayScene.unity
   sceneAsset: {fileID: 102900000, guid: 03c9f4687584bc948b35ea7245abbaf3, type: 3}
+  scenePath: Assets/Scenes/PlayScene.unity
   isActivate: 1
   isPersist: 0
+  sceneEvents:
+    onLoadEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadProgress:
+      m_PersistentCalls:
+        m_Calls: []
+    onUnloadEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onUnloadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onActivateEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onActivateExited:
+      m_PersistentCalls:
+        m_Calls: []

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using CHARK.ScriptableScenes.Events;
 using CHARK.ScriptableScenes.PropertyAttributes;
 using CHARK.ScriptableScenes.Utilities;
@@ -73,10 +74,7 @@ namespace CHARK.ScriptableScenes
         public void OnBeforeSerialize()
         {
 #if UNITY_EDITOR
-            if (sceneAsset.TryGetSceneDetails(out var newScenePath, out _))
-            {
-                scenePath = newScenePath;
-            }
+            UpdateScenePath();
 #endif
         }
 
@@ -184,6 +182,26 @@ namespace CHARK.ScriptableScenes
 
         #region Private Methods
 
+#if UNITY_EDITOR
+        private void UpdateScenePath()
+        {
+            if (sceneAsset.TryGetSceneDetails(out var newScenePath, out _) == false)
+            {
+                return;
+            }
+
+            var oldScenePath = scenePath;
+            if (string.Equals(oldScenePath, newScenePath))
+            {
+                return;
+            }
+
+            scenePath = newScenePath;
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.AssetDatabase.SaveAssetIfDirty(this);
+        }
+#endif
+
         private IEnumerator LoadInternalRoutine()
         {
             var operation = StartLoadSceneOperation();
@@ -233,6 +251,29 @@ namespace CHARK.ScriptableScenes
         {
             return SceneManager.GetSceneByPath(scenePath);
         }
+
+#if UNITY_EDITOR
+        private class ScenePathProcessor : UnityEditor.AssetPostprocessor
+        {
+            private static void OnPostprocessAllAssets(
+                string[] importedAssets,
+                string[] deletedAssets,
+                string[] movedAssets,
+                string[] movedFromAssetPaths
+            )
+            {
+                var scriptableScenes = UnityEditor.AssetDatabase
+                    .FindAssets($"t:{typeof(ScriptableScene)}")
+                    .Select(UnityEditor.AssetDatabase.GUIDToAssetPath)
+                    .Select(UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableScene>);
+
+                foreach (var scriptableScene in scriptableScenes)
+                {
+                    scriptableScene.UpdateScenePath();
+                }
+            }
+        }
+#endif
 
         #endregion
     }
