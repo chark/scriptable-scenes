@@ -206,11 +206,19 @@ namespace CHARK.ScriptableScenes
 
         private void Log(string title, params string[] details)
         {
+#if UNITY_EDITOR
             Debug.Log(
                 $"<b><color=cyan>{title}</color></b>\n" +
                 $"{string.Join(", ", details)}",
                 this
             );
+#else
+            Debug.Log(
+                $"{title}\n" +
+                $"{string.Join(", ", details)}",
+                this
+            );
+#endif
         }
 
         #endregion

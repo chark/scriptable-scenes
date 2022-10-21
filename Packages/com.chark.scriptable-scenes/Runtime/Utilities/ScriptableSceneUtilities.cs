@@ -128,45 +128,23 @@ namespace CHARK.ScriptableScenes.Utilities
         }
 
         /// <returns>
-        /// <c>true</c> if a collection which is currently loaded is retrieved or <c>false</c>
-        /// otherwise.
+        /// <c>true</c> if a collection which is currently opened in the scene manager is retrieved
+        /// or <c>false</c> otherwise.
         /// </returns>
-        internal static bool TryGetLoadedCollection(out BaseScriptableSceneCollection collection)
+        internal static bool TryGetOpenCollection(out BaseScriptableSceneCollection collection)
         {
 #if UNITY_EDITOR
             collection = UnityEditor.AssetDatabase
                 .FindAssets($"t:{typeof(BaseScriptableSceneCollection)}")
                 .Select(UnityEditor.AssetDatabase.GUIDToAssetPath)
                 .Select(UnityEditor.AssetDatabase.LoadAssetAtPath<BaseScriptableSceneCollection>)
-                .FirstOrDefault(IsLoaded);
+                .FirstOrDefault(IsOpen);
 
             return collection != false;
 #else
             collection = null;
             return false;
 #endif
-        }
-
-        /// <returns>
-        /// <c>true</c> if a <paramref name="scene"/> is retrieved for given
-        /// <paramref name="scriptableScene"/> or <c>false</c> otherwise.
-        /// </returns>
-        internal static bool TryGetLoadedScene(BaseScriptableScene scriptableScene, out Scene scene)
-        {
-            var targetSceneBuildIndex = scriptableScene.SceneBuildIndex;
-            scene = default;
-
-            foreach (var loadedScene in GetValidScenes())
-            {
-                var loadedSceneBuildIndex = loadedScene.buildIndex;
-                if (targetSceneBuildIndex == loadedSceneBuildIndex)
-                {
-                    scene = loadedScene;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         // TODO: how can we avoid this?
@@ -253,17 +231,25 @@ namespace CHARK.ScriptableScenes.Utilities
 
         #region Private Methods
 
-        private static bool IsLoaded(BaseScriptableSceneCollection collection)
+#if UNITY_EDITOR
+        private static bool IsOpen(BaseScriptableSceneCollection collection)
         {
-            var scriptableSceneIndices = collection.Scenes
-                .Select(scene => scene.SceneBuildIndex);
+            var scriptableScenes = collection.Scenes.ToList();
+            var validScenes = GetValidScenes();
 
-            var uniqueScriptableSceneIndices = new HashSet<int>(scriptableSceneIndices);
+            var matchingSceneCount = 0;
+            foreach (var validScene in validScenes)
+            {
+                foreach (var scriptableScene in scriptableScenes)
+                {
+                    if (scriptableScene.Equals(validScene))
+                    {
+                        matchingSceneCount++;
+                    }
+                }
+            }
 
-            var validSceneIndices = GetValidScenes().Select(scene => scene.buildIndex);
-            var uniqueLoadedSceneIndices = new HashSet<int>(validSceneIndices);
-
-            return uniqueScriptableSceneIndices.SetEquals(uniqueLoadedSceneIndices);
+            return matchingSceneCount == scriptableScenes.Count;
         }
 
         private static IEnumerable<Scene> GetValidScenes()
@@ -277,6 +263,7 @@ namespace CHARK.ScriptableScenes.Utilities
                 }
             }
         }
+#endif
 
         #endregion
     }

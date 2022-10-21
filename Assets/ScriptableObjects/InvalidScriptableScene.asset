@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: InvalidScriptableScene
   m_EditorClassIdentifier: 
-  sceneBuildIndex: -1
-  scenePath: Assets/Scenes/FAKE_SCENE.unity
   sceneAsset: {fileID: 102900000, guid: ae3ef32b98f76b94bb5853761daf0eea, type: 3}
+  scenePath: Assets/Scenes/InvalidScene.unity
   isActivate: 1
-  isPersist: 1
+  isPersist: 0
   sceneEvents:
     onLoadEntered:
       m_PersistentCalls:

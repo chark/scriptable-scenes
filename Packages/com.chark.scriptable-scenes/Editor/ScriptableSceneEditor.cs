@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using CHARK.ScriptableScenes.Editor.Utilities;
 using UnityEditor;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 namespace CHARK.ScriptableScenes.Editor
@@ -11,7 +10,7 @@ namespace CHARK.ScriptableScenes.Editor
     /// </summary>
     [CanEditMultipleObjects]
     [CustomEditor(typeof(BaseScriptableScene), true)]
-    internal class SceneSceneEditor : UnityEditor.Editor
+    internal class ScriptableSceneEditor : UnityEditor.Editor
     {
         #region Private Fields
 
@@ -89,25 +88,6 @@ namespace CHARK.ScriptableScenes.Editor
                 scenes.Add(new EditorBuildSettingsScene(scenePath, true));
                 EditorBuildSettings.scenes = scenes.ToArray();
             }
-        }
-
-        private bool TryGetEditorBuildSettingsScene(out EditorBuildSettingsScene scene)
-        {
-            scene = null;
-
-            var scriptableScenePath = scriptableScene.ScenePath;
-            var scenes = EditorBuildSettings.scenes.ToList();
-
-            foreach (var otherScene in scenes)
-            {
-                if (otherScene.path == scriptableScenePath)
-                {
-                    scene = otherScene;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         #endregion
