@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace CHARK.ScriptableScenes.Tests
 {
@@ -14,7 +15,14 @@ namespace CHARK.ScriptableScenes.Tests
         /// </summary>
         internal class SceneDefinition
         {
-            internal int BuildIndex { get; set; }
+            internal string ScenePath => scene.name;
+
+            private Scene scene;
+
+            public SceneDefinition(Scene scene)
+            {
+                this.scene = scene;
+            }
         }
 
         #endregion
@@ -22,6 +30,7 @@ namespace CHARK.ScriptableScenes.Tests
         #region Private Fields
 
         private const int MaxCollectionLoadWaitTicks = 120;
+        private const string TestSceneNameFormat = "{0}_{1}";
 
         #endregion
 
@@ -36,6 +45,17 @@ namespace CHARK.ScriptableScenes.Tests
             var controller = gameObject.AddComponent<ScriptableSceneController>();
 
             return controller;
+        }
+
+        /// <returns>
+        /// Scene which can be used in tests.
+        /// </returns>
+        internal static Scene CreateTestScene(string sceneName)
+        {
+            var sceneGuid = Guid.NewGuid().ToString();
+            var sceneNameFormatted = string.Format(TestSceneNameFormat, sceneName, sceneGuid);
+
+            return SceneManager.CreateScene(sceneNameFormatted);
         }
 
         /// <returns>
@@ -54,7 +74,7 @@ namespace CHARK.ScriptableScenes.Tests
             foreach (var sceneDefinition in sceneDefinitions)
             {
                 var scene = ScriptableObject.CreateInstance<ScriptableScene>();
-                scene.SetField("sceneBuildIndex", sceneDefinition.BuildIndex);
+                scene.SetField("scenePath", sceneDefinition.ScenePath);
 
                 scriptableScenes.Add(scene);
             }
