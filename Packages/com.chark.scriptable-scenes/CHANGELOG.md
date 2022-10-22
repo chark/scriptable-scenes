@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 - Fixed Scriptable Scene assets not updating when files are moved, deleted or created.
+- Updated tests to operate on scene path rather than build index.
 
 ## [0.0.7] - 2022-10-22
 

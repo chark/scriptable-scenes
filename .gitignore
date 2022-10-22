@@ -52,3 +52,7 @@ UserSettings/
 
 # Rider
 .idea/
+
+# Tests
+InitTestScene*.unity
+InitTestScene*.unity.meta
