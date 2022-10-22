@@ -249,6 +249,14 @@ namespace CHARK.ScriptableScenes
 
         private Scene GetScene()
         {
+            if (string.IsNullOrWhiteSpace(scenePath))
+            {
+                return new Scene
+                {
+                    name = "Invalid Scene"
+                };
+            }
+
             return SceneManager.GetSceneByPath(scenePath);
         }
 

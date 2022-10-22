@@ -29,8 +29,9 @@ namespace CHARK.ScriptableScenes.Tests
             collectionEvents = controller.CollectionEvents;
             sceneEvents = controller.SceneEvents;
 
+            var testScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene");
             collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition {BuildIndex = 0}
+                new ScriptableSceneTestUtilities.SceneDefinition(testScene)
             );
 
             scene = collection.Scenes.First();

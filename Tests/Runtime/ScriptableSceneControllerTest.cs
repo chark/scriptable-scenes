@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using NUnit.Framework;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 namespace CHARK.ScriptableScenes.Tests
@@ -7,6 +8,9 @@ namespace CHARK.ScriptableScenes.Tests
     internal class ScriptableSceneControllerTests
     {
         #region Private Fields
+
+        private Scene testSetupScene;
+        private Scene testMainScene;
 
         private ScriptableSceneController controller;
 
@@ -17,6 +21,9 @@ namespace CHARK.ScriptableScenes.Tests
         [SetUp]
         public void SetUp()
         {
+            testSetupScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene_A");
+            testMainScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene_B");
+
             controller = ScriptableSceneTestUtilities.CreateController();
         }
 
@@ -25,8 +32,8 @@ namespace CHARK.ScriptableScenes.Tests
         {
             // Given: collection with two scenes.
             var collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition { BuildIndex = 0 },
-                new ScriptableSceneTestUtilities.SceneDefinition { BuildIndex = 1 }
+                new ScriptableSceneTestUtilities.SceneDefinition(testSetupScene),
+                new ScriptableSceneTestUtilities.SceneDefinition(testMainScene)
             );
 
             // When: loading a collection.
@@ -48,8 +55,8 @@ namespace CHARK.ScriptableScenes.Tests
         {
             // Given: loaded collection with two scenes.
             var collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition { BuildIndex = 0 },
-                new ScriptableSceneTestUtilities.SceneDefinition { BuildIndex = 1 }
+                new ScriptableSceneTestUtilities.SceneDefinition(testSetupScene),
+                new ScriptableSceneTestUtilities.SceneDefinition(testMainScene)
             );
 
             yield return controller.LoadRoutine(collection);
