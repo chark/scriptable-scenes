@@ -1,0 +1,13 @@
+﻿/* Help box styling */
+ScriptableSceneStatus {
+  margin-top: 4px;
+}
+
+ScriptableSceneStatus HelpBox {
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+ScriptableSceneStatus HelpBox Label {
+  margin-right: auto;
+}

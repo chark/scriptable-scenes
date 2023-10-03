@@ -1,65 +1,119 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CHARK.ScriptableScenes.Events;
-using CHARK.ScriptableScenes.PropertyAttributes;
 using CHARK.ScriptableScenes.Transitions;
 using CHARK.ScriptableScenes.Utilities;
 using UnityEngine;
 
 namespace CHARK.ScriptableScenes
 {
+    /// <summary>
+    /// Collection of <see cref="ScriptableScene"/> which can be used to play, load or open a set
+    /// of scenes at once.
+    /// </summary>
     [CreateAssetMenu(
         fileName = CreateAssetMenuConstants.BaseFileName + nameof(ScriptableSceneCollection),
         menuName = CreateAssetMenuConstants.BaseMenuName + "/Scriptable Scene Collection",
         order = CreateAssetMenuConstants.BaseOrder
     )]
-    internal sealed class ScriptableSceneCollection :
-        BaseScriptableSceneCollection,
-        ISerializationCallbackReceiver
+    public sealed class ScriptableSceneCollection : ScriptableObject, ISerializationCallbackReceiver
     {
-        #region Editor Fields
 
-        [Header("Internal")]
-        [ReadOnly]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+        [Sirenix.OdinInspector.ReadOnly]
+#else
+        [Header("General")]
+        [CHARK.ScriptableScenes.PropertyAttributes.ReadOnly]
+#endif
         [Tooltip("Unique collection asset GUID")]
         [SerializeField]
         private string guid;
 
-        [Header("Configuration")]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#endif
+        [Tooltip("User-friendly name for this collection")]
+        [SerializeField]
+        public string prettyName;
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
+#else
+        [Header("Features")]
+#endif
         [Tooltip("Optional transition used to transition into and out of this collection")]
         [SerializeField]
-        private BaseScriptableSceneTransition transition;
+        private ScriptableSceneTransition transition;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.PropertySpace]
+        [Sirenix.OdinInspector.ListDrawerSettings(DefaultExpandedState = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
+#endif
         [Tooltip("List of Scriptable Scenes to be loaded with this collection")]
         [SerializeField]
-        private List<BaseScriptableScene> scriptableScenes = new List<BaseScriptableScene>();
+        private List<ScriptableScene> scriptableScenes = new();
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Collection Events")]
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+#else
         [Header("Events")]
+#endif
         [SerializeField]
-        private CollectionEventHandler collectionEvents = new CollectionEventHandler();
+        private CollectionEventHandler collectionEvents = new();
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Scene Events")]
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+#endif
         [SerializeField]
-        private SceneEventHandler sceneEvents = new SceneEventHandler();
+        private SceneEventHandler sceneEvents = new();
 
-        #endregion
+        /// <summary>
+        /// Unique collection id.
+        /// </summary>
+        public string Guid => guid;
 
-        #region Public Properties
+        /// <summary>
+        /// Name of this collection.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                var trimmedPrettyName = prettyName?.Trim();
+                if (string.IsNullOrEmpty(trimmedPrettyName))
+                {
+                    return name;
+                }
 
-        public override IEnumerable<BaseScriptableScene> Scenes => GetValidScriptableScenes();
+                return trimmedPrettyName;
+            }
+        }
 
-        public override ICollectionEventHandler CollectionEvents => collectionEvents;
+        /// <summary>
+        /// Count of <see cref="ScriptableScene"/> in this collection.
+        /// </summary>
+        public int SceneCount => GetValidScriptableScenes().Count;
 
-        public override ISceneEventHandler SceneEvents => sceneEvents;
+        /// <summary>
+        /// Available <see cref="ScriptableScene"/> in this collection.
+        /// </summary>
+        public IEnumerable<ScriptableScene> Scenes => GetValidScriptableScenes();
 
-        public override string Guid => guid;
+        /// <summary>
+        /// Collection events invoked on this collection.
+        /// </summary>
+        public ICollectionEventHandler CollectionEvents => collectionEvents;
 
-        public override int SceneCount => scriptableScenes.Count;
-
-        public override string Name => name;
-
-        #endregion
-
-        #region Unity Lifecycle
+        /// <summary>
+        /// Scene events invoked on scenes of this collection.
+        /// </summary>
+        public ISceneEventHandler SceneEvents => sceneEvents;
 
         public void OnBeforeSerialize()
         {
@@ -75,25 +129,30 @@ namespace CHARK.ScriptableScenes
         {
         }
 
-        #endregion
-
-        #region Public Methods
-
-        public override IEnumerator LoadRoutine()
+        /// <returns>
+        /// Routine which loads this collection.
+        /// </returns>
+        public IEnumerator LoadRoutine()
         {
             collectionEvents.RaiseLoadEntered(this);
             yield return LoadInternalRoutine();
             collectionEvents.RaiseLoadExited(this);
         }
 
-        public override IEnumerator UnloadRoutine()
+        /// <returns>
+        /// Routine which unloads this collection.
+        /// </returns>
+        public IEnumerator UnloadRoutine()
         {
             collectionEvents.RaiseUnloadEntered(this);
             yield return UnloadInternalRoutine();
             collectionEvents.RaiseUnloadExited(this);
         }
 
-        public override IEnumerator ShowTransitionRoutine()
+        /// <returns>
+        /// Routine which shows the transition of this collection.
+        /// </returns>
+        public IEnumerator ShowTransitionRoutine()
         {
             if (transition)
             {
@@ -103,7 +162,21 @@ namespace CHARK.ScriptableScenes
             }
         }
 
-        public override IEnumerator HideTransitionRoutine()
+        /// <returns>
+        /// Routine which delays the transition of this collection.
+        /// </returns>
+        public IEnumerator DelayTransitionRoutine()
+        {
+            if (transition)
+            {
+                yield return transition.DelayRoutine();
+            }
+        }
+
+        /// <returns>
+        /// Routine which hides the transition of this collection.
+        /// </returns>
+        public IEnumerator HideTransitionRoutine()
         {
             if (transition)
             {
@@ -113,10 +186,6 @@ namespace CHARK.ScriptableScenes
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
         private IEnumerator LoadInternalRoutine()
         {
             var validScriptableScenes = GetValidScriptableScenes();
@@ -124,7 +193,7 @@ namespace CHARK.ScriptableScenes
 
             for (var index = 0; index < validScriptableScenes.Count; index++)
             {
-                var totalLoadProgress = Mathf.Clamp01((float) index / sceneCount);
+                var totalLoadProgress = Mathf.Clamp01((float)index / sceneCount);
                 var scriptableScene = validScriptableScenes[index];
 
                 try
@@ -145,6 +214,7 @@ namespace CHARK.ScriptableScenes
                     scriptableScene.SceneEvents.OnLoadProgress -= OnLoadProgress;
                 }
 
+                // ReSharper disable once InconsistentNaming
                 void OnLoadProgress(SceneLoadProgressEventArgs args)
                 {
                     var collectionProgress = Mathf.Clamp01(
@@ -182,9 +252,9 @@ namespace CHARK.ScriptableScenes
             }
         }
 
-        private IReadOnlyList<BaseScriptableScene> GetValidScriptableScenes()
+        private IReadOnlyList<ScriptableScene> GetValidScriptableScenes()
         {
-            var scenes = new List<BaseScriptableScene>();
+            var scenes = new List<ScriptableScene>();
             foreach (var scriptableScene in scriptableScenes)
             {
                 // Scenes might ne null if the user adds a new scene and forgets to select an asset.
@@ -196,7 +266,5 @@ namespace CHARK.ScriptableScenes
 
             return scenes;
         }
-
-        #endregion
     }
 }

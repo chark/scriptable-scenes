@@ -12,24 +12,14 @@ namespace CHARK.ScriptableScenes.Transitions
     [RequireComponent(typeof(Canvas))]
     internal sealed class FadeCanvas : MonoBehaviour
     {
-        #region Editor Fields
-
         [SerializeField]
         private FadeScriptableSceneTransition transition;
-
-        #endregion
-
-        #region Private Fields
 
         // Optional raycaster.
         private GraphicRaycaster graphicRaycaster;
 
         private CanvasGroup canvasGroup;
         private Canvas canvas;
-
-        #endregion
-
-        #region Unity Lifecycle
 
         private void Awake()
         {
@@ -53,10 +43,6 @@ namespace CHARK.ScriptableScenes.Transitions
                 transition.RemoveCanvas(this);
             }
         }
-
-        #endregion
-
-        #region Internal Methods
 
         internal void SetAlpha(float alpha)
         {
@@ -84,7 +70,5 @@ namespace CHARK.ScriptableScenes.Transitions
             canvasGroup.enabled = false;
             canvas.enabled = false;
         }
-
-        #endregion
     }
 }

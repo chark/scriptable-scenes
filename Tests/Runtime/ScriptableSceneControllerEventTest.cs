@@ -9,18 +9,12 @@ namespace CHARK.ScriptableScenes.Tests
 {
     internal class ScriptableSceneControllerEventTest
     {
-        #region Private Fields
-
         private ScriptableSceneController controller;
         private ICollectionEventHandler collectionEvents;
         private ISceneEventHandler sceneEvents;
 
-        private BaseScriptableSceneCollection collection;
-        private BaseScriptableScene scene;
-
-        #endregion
-
-        #region Public Collection Event Methods
+        private ScriptableSceneCollection collection;
+        private ScriptableScene scene;
 
         [SetUp]
         public void SetUp()
@@ -29,8 +23,9 @@ namespace CHARK.ScriptableScenes.Tests
             collectionEvents = controller.CollectionEvents;
             sceneEvents = controller.SceneEvents;
 
+            var testScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene");
             collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition {BuildIndex = 0}
+                new ScriptableSceneTestUtilities.SceneDefinition(testScene)
             );
 
             scene = collection.Scenes.First();
@@ -118,10 +113,6 @@ namespace CHARK.ScriptableScenes.Tests
             // Then: event arguments should be captured.
             Assert.AreEqual(collection, args.Collection);
         }
-
-        #endregion
-
-        #region Public Scene Event Methods
 
         [UnityTest]
         public IEnumerator ShouldInvokeSceneOnLoadEntered()
@@ -228,7 +219,5 @@ namespace CHARK.ScriptableScenes.Tests
             // Then: event arguments should be captured.
             Assert.AreEqual(scene, args.Scene);
         }
-
-        #endregion
     }
 }

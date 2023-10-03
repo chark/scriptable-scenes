@@ -7,32 +7,31 @@ namespace CHARK.ScriptableScenes
 {
     /// <summary>
     /// Central scene controller which handles loading and unloading of
-    /// <see cref="BaseScriptableSceneCollection"/>.
+    /// <see cref="ScriptableSceneCollection"/>.
     /// </summary>
     [AddComponentMenu(
         AddComponentMenuConstants.BaseMenuName + "/Scriptable Scene Controller"
     )]
     public sealed class ScriptableSceneController : MonoBehaviour
     {
-        #region Editor Fields
-
         private enum SceneLoadMode
         {
             [Tooltip("Scenes will not be loaded automatically")]
+            // ReSharper disable once UnusedMember.Local
             None,
 
             [Tooltip("Automatically load scenes in Awake")]
             Awake,
 
             [Tooltip("Automatically load scenes in Start")]
-            Start
+            Start,
         }
 
         // ReSharper disable once NotAccessedField.Local
         [Header("Configuration")]
         [Tooltip("Scene collection which is first to be loaded when the game runs in build mode")]
         [SerializeField]
-        private BaseScriptableSceneCollection initialCollection;
+        private ScriptableSceneCollection initialCollection;
 
         [Tooltip("Should and when " + nameof(initialCollection) + " be loaded?")]
         [SerializeField]
@@ -41,25 +40,16 @@ namespace CHARK.ScriptableScenes
         [Header("Events")]
         [Tooltip("handler for global (invoked for all collections) collection events")]
         [SerializeField]
-        private CollectionEventHandler collectionEvents = new CollectionEventHandler();
+        private CollectionEventHandler collectionEvents = new();
 
         [Tooltip("Handler for global (invoked for all scenes) scene events")]
         [SerializeField]
-        private SceneEventHandler sceneEvents = new SceneEventHandler();
+        private SceneEventHandler sceneEvents = new();
 
-        #endregion
-
-        #region Private Fields
-
-        private BaseScriptableSceneCollection loadingCollection;
-        private BaseScriptableSceneCollection loadedCollection;
-
-        #endregion
-
-        #region Public Properties
+        private ScriptableSceneCollection loadedCollection;
 
         /// <summary>
-        /// Global events invoked for all <see cref="BaseScriptableSceneCollection"/> assets.
+        /// Global events invoked for all <see cref="ScriptableSceneCollection"/> assets.
         /// </summary>
         public ICollectionEventHandler CollectionEvents => collectionEvents;
 
@@ -71,13 +61,14 @@ namespace CHARK.ScriptableScenes
         // ReSharper disable once UnusedMember.Global
         /// <summary>
         /// <c>true</c> if there currently a collection being loaded in
-        /// <see cref="loadingCollection"/> or <c>false</c> otherwise.
+        /// <see cref="LoadingCollection"/> or <c>false</c> otherwise.
         /// </summary>
         public bool IsLoading { get; private set; }
 
-        #endregion
-
-        #region Unity Lifecycle
+        /// <summary>
+        /// Currently loading collection.
+        /// </summary>
+        public ScriptableSceneCollection LoadingCollection { get; private set; }
 
         private void Awake()
         {
@@ -87,7 +78,7 @@ namespace CHARK.ScriptableScenes
             }
 
 #if UNITY_EDITOR
-            LoadScriptableSceneCollection();
+            LoadSelectedOrOpenedCollection();
 #else
             LoadInitialSceneCollection();
 #endif
@@ -101,15 +92,11 @@ namespace CHARK.ScriptableScenes
             }
 
 #if UNITY_EDITOR
-            LoadScriptableSceneCollection();
+            LoadSelectedOrOpenedCollection();
 #else
             LoadInitialSceneCollection();
 #endif
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Reloads <see cref="loadedCollection"/>.
@@ -119,7 +106,7 @@ namespace CHARK.ScriptableScenes
             if (loadedCollection == false)
             {
                 Debug.LogWarning(
-                    $"No {nameof(BaseScriptableSceneCollection)} is loaded, reload will be ignored",
+                    $"No {nameof(ScriptableSceneCollection)} is loaded, reload will be ignored",
                     this
                 );
 
@@ -133,7 +120,7 @@ namespace CHARK.ScriptableScenes
         /// Load a set of scenes using the provided <paramref name="collection"/> and unload
         /// <see cref="loadedCollection"/>.
         /// </summary>
-        public void LoadSceneCollection(BaseScriptableSceneCollection collection)
+        public void LoadSceneCollection(ScriptableSceneCollection collection)
         {
             StartCoroutine(LoadSceneCollectionRoutine(collection));
         }
@@ -142,9 +129,9 @@ namespace CHARK.ScriptableScenes
         /// <c>true</c> i`f a collection which is currently being loaded is retrieved or
         /// <c>false</c> otherwise.
         /// </returns>
-        public bool TryGetLoadingSceneCollection(out BaseScriptableSceneCollection collection)
+        public bool TryGetLoadingSceneCollection(out ScriptableSceneCollection collection)
         {
-            collection = loadingCollection;
+            collection = LoadingCollection;
             return collection != false;
         }
 
@@ -152,34 +139,19 @@ namespace CHARK.ScriptableScenes
         /// <c>true</c> if a collection which is currently loaded is retrieved or <c>false</c>
         /// otherwise.
         /// </returns>
-        public bool TryGetLoadedSceneCollection(out BaseScriptableSceneCollection collection)
+        public bool TryGetLoadedSceneCollection(out ScriptableSceneCollection collection)
         {
             collection = loadedCollection;
             return collection != false;
         }
 
-        #endregion
-
-        #region Private Methods
-
-        /// <summary>
-        /// Load scene collection based on custom Scriptable Scene logic.
-        /// </summary>
-        private void LoadScriptableSceneCollection()
+#if UNITY_EDITOR
+        private void LoadSelectedOrOpenedCollection()
         {
-            StartCoroutine(LoadScriptableSceneCollectionRoutine());
+            StartCoroutine(LoadSelectedOrOpenedCollectionRoutine());
         }
 
-        /// <summary>
-        /// Load scene collection specified in <see cref="initialCollection"/>.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private void LoadInitialSceneCollection()
-        {
-            StartCoroutine(LoadInitialSceneCollectionRoutine());
-        }
-
-        private IEnumerator LoadScriptableSceneCollectionRoutine()
+        private IEnumerator LoadSelectedOrOpenedCollectionRoutine()
         {
             if (ScriptableSceneUtilities.TryGetSelectedCollection(out var selected))
             {
@@ -187,18 +159,23 @@ namespace CHARK.ScriptableScenes
                 yield break;
             }
 
-            if (ScriptableSceneUtilities.TryGetLoadedCollection(out var loaded))
+            if (ScriptableSceneUtilities.TryGetOpenCollection(out var open))
             {
-                yield return LoadSceneCollectionRoutine(loaded);
+                yield return LoadSceneCollectionRoutine(open);
                 yield break;
             }
 
             Debug.LogWarning(
-                $"Cannot load initial {nameof(BaseScriptableSceneCollection)}, make sure a valid " +
-                $"{nameof(BaseScriptableSceneCollection)} exists which matches currently loaded " +
-                $"scenes or use the Scene Manager Window",
+                $"Cannot load initial {nameof(ScriptableSceneCollection)}, make sure a valid " +
+                $"{nameof(ScriptableSceneCollection)} exists which matches currently loaded " +
+                $"scenes, or use the Scene Manager Window",
                 this
             );
+        }
+#else
+        private void LoadInitialSceneCollection()
+        {
+            StartCoroutine(LoadInitialSceneCollectionRoutine());
         }
 
         private IEnumerator LoadInitialSceneCollectionRoutine()
@@ -216,8 +193,9 @@ namespace CHARK.ScriptableScenes
 
             yield return LoadSceneCollectionRoutine(initialCollection);
         }
+#endif
 
-        private IEnumerator LoadSceneCollectionRoutine(BaseScriptableSceneCollection collection)
+        private IEnumerator LoadSceneCollectionRoutine(ScriptableSceneCollection collection)
         {
             if (collection.SceneCount == 0)
             {
@@ -234,14 +212,14 @@ namespace CHARK.ScriptableScenes
             {
                 Debug.LogWarning(
                     $"Can't load two collections at the same time, collection " +
-                    $"\"{loadingCollection.Name}\" is currently being loaded",
+                    $"\"{LoadingCollection.Name}\" is currently being loaded",
                     this
                 );
 
                 yield break;
             }
 
-            loadingCollection = collection;
+            LoadingCollection = collection;
             IsLoading = true;
 
             try
@@ -251,13 +229,13 @@ namespace CHARK.ScriptableScenes
             }
             finally
             {
-                loadingCollection = null;
+                LoadingCollection = null;
                 IsLoading = false;
             }
         }
 
         private IEnumerator LoadSceneCollectionInternalRoutine(
-            BaseScriptableSceneCollection collection
+            ScriptableSceneCollection collection
         )
         {
             // TODO: reduce nesting
@@ -286,6 +264,9 @@ namespace CHARK.ScriptableScenes
                     collection.CollectionEvents.AddListeners(collectionEvents);
                     collection.SceneEvents.AddListeners(sceneEvents);
                     yield return collection.LoadRoutine();
+
+                    // TODO: scuffed
+                    LightProbes.TetrahedralizeAsync();
                 }
                 finally
                 {
@@ -293,6 +274,7 @@ namespace CHARK.ScriptableScenes
                     collection.SceneEvents.RemoveListeners(sceneEvents);
                 }
 
+                yield return collection.DelayTransitionRoutine();
                 yield return collection.HideTransitionRoutine();
             }
             finally
@@ -300,7 +282,5 @@ namespace CHARK.ScriptableScenes
                 collection.CollectionEvents.RemoveTransitionListeners(collectionEvents);
             }
         }
-
-        #endregion
     }
 }

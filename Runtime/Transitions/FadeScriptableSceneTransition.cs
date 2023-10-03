@@ -10,10 +10,8 @@ namespace CHARK.ScriptableScenes.Transitions
         menuName = CreateAssetMenuConstants.BaseMenuName + "/Fade Scriptable Scene Transition",
         order = CreateAssetMenuConstants.TransitionOrder
     )]
-    internal sealed class FadeScriptableSceneTransition : BaseScriptableSceneTransition
+    internal sealed class FadeScriptableSceneTransition : ScriptableSceneTransition
     {
-        #region Editor Fields
-
         [Header("Alpha")]
         [Tooltip("Canvas alpha which is used when the canvas is faded in")]
         [Range(0f, 1f)]
@@ -26,30 +24,22 @@ namespace CHARK.ScriptableScenes.Transitions
         private float fadeOutAlpha;
 
         [Header("Timings")]
+        [Tooltip("Amount of seconds to wait before fading out the canvas")]
+        [Min(0f)]
+        [SerializeField]
+        private float transitionDelaySeconds = 2.0f;
+
         [Tooltip("Time taken to fade in the canvas")]
         [Min(0f)]
         [SerializeField]
         private float fadeInDurationSeconds = 0.5f;
-
-        [Tooltip("Amount of seconds to wait before fading out the canvas")]
-        [Min(0f)]
-        [SerializeField]
-        private float fadeOutWaitDurationSeconds = 2.0f;
 
         [Tooltip("Time taken to fade out the canvas")]
         [Min(0f)]
         [SerializeField]
         private float fadeOutDurationSeconds = 0.5f;
 
-        #endregion
-
-        #region Private Fields
-
-        private readonly List<FadeCanvas> canvases = new List<FadeCanvas>();
-
-        #endregion
-
-        #region Protected Methods
+        private readonly List<FadeCanvas> canvases = new();
 
         protected override IEnumerator OnShowRoutine()
         {
@@ -58,21 +48,20 @@ namespace CHARK.ScriptableScenes.Transitions
             yield return FadeRoutine(fadeOutAlpha, fadeInAlpha, fadeInDurationSeconds);
         }
 
+        protected override IEnumerator OnDelayRoutine()
+        {
+            if (transitionDelaySeconds > 0.0f)
+            {
+                yield return new WaitForSeconds(transitionDelaySeconds);
+            }
+        }
+
         protected override IEnumerator OnHideRoutine()
         {
-            if (fadeOutWaitDurationSeconds > 0.0f)
-            {
-                yield return new WaitForSeconds(fadeOutWaitDurationSeconds);
-            }
-
             // Fade out the curtains.
             yield return FadeRoutine(fadeInAlpha, fadeOutAlpha, fadeOutDurationSeconds);
             HideFadeCanvas();
         }
-
-        #endregion
-
-        #region Internal Methods
 
         internal void AddCanvas(FadeCanvas canvas)
         {
@@ -83,10 +72,6 @@ namespace CHARK.ScriptableScenes.Transitions
         {
             canvases.Remove(canvas);
         }
-
-        #endregion
-
-        #region Private Methods
 
         private IEnumerator FadeRoutine(
             float from,
@@ -134,7 +119,5 @@ namespace CHARK.ScriptableScenes.Transitions
                 canvas.HideCanvas();
             }
         }
-
-        #endregion
     }
 }

@@ -1,0 +1,112 @@
+﻿/* Window content */
+VisualElement.window-content {
+  padding: 4px;
+}
+
+/* Global actions styling */
+ScriptableSceneCollectionGlobalActions {
+  /* General action layout */
+  margin: 2px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+ScriptableSceneCollectionGlobalActions Button {
+  /* Adjust width of each button */
+  min-width: 30px;
+}
+
+ScriptableSceneCollectionGlobalActions Button.pressed {
+  /* Some buttons can be toggled, this class enables that */
+  background-color: var(--theme-button-background-color-checked);
+  border-color: var(--unity-colors-button-border_accent);
+  border-top-color: var(--unity-colors-button-border-pressed);
+}
+
+/* General list styling */
+ScriptableSceneCollectionList VisualElement.unity-list-view__reorderable-handle {
+  /* Center drag handle */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding-top: 0;
+}
+
+ScriptableSceneCollectionList VisualElement.unity-list-view__reorderable-item__container {
+  /* Fix weird padding added to each item */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+ScriptableSceneCollectionList Toggle.unity-foldout__toggle {
+  /* Fix foldout toggles having inconsistent margins */
+  margin: 2px;
+}
+
+ScriptableSceneCollectionList Toggle.unity-foldout__toggle VisualElement.unity-foldout__input {
+  /* Shrink labels - actions take precedence */
+  flex-shrink: 1;
+}
+
+ScriptableSceneCollectionList Toggle.unity-foldout__toggle Label.unity-foldout__text {
+  /* General label styling in foldouts */
+  -unity-text-align: middle-left;
+  -unity-font-style: bold;
+}
+
+/* Foldout actions styling */
+ScriptableSceneCollectionActions {
+  margin-left: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex-shrink: 0;
+  min-width: 140px;
+  height: 100%;
+}
+
+ScriptableSceneCollectionActions Image {
+  flex-shrink: 0;
+
+  width: 16px;
+  height: 16px;
+}
+
+ScriptableSceneCollectionActions Button {
+  min-width: 20px;
+  width: 45px;
+
+  padding: 1px;
+  margin: 1px;
+}
+
+/* Foldout content styling (adjust responsive sizing a bit) */
+ScriptableSceneCollectionFoldoutContent > * > Label {
+  min-width: 0;
+  width: 135px;
+
+  overflow: hidden;
+  flex-shrink: 1;
+}
+
+ScriptableSceneCollectionFoldoutContent > * > VisualElement {
+  min-width: 140px;
+}
+
+ScriptableSceneCollectionFoldoutContent ObjectField.readonly ObjectFieldSelector {
+  display: none;
+}
+
+/* Status icon styling */
+ScriptableSceneCollectionStatusIcon {
+  flex-shrink: 0;
+}

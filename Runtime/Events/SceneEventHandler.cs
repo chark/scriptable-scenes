@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,39 +10,26 @@ namespace CHARK.ScriptableScenes.Events
     [Serializable]
     internal sealed class SceneEventHandler : ISceneEventHandler
     {
-        #region Editor Fields
+        [SerializeField]
+        private UnityEvent<SceneLoadEventArgs> onLoadEntered = new();
 
         [SerializeField]
-        private UnityEvent<SceneLoadEventArgs> onLoadEntered =
-            new UnityEvent<SceneLoadEventArgs>();
+        private UnityEvent<SceneLoadEventArgs> onLoadExited = new();
 
         [SerializeField]
-        private UnityEvent<SceneLoadEventArgs> onLoadExited =
-            new UnityEvent<SceneLoadEventArgs>();
+        private UnityEvent<SceneLoadProgressEventArgs> onLoadProgress = new();
 
         [SerializeField]
-        private UnityEvent<SceneLoadProgressEventArgs> onLoadProgress =
-            new UnityEvent<SceneLoadProgressEventArgs>();
+        private UnityEvent<SceneUnloadEventArgs> onUnloadEntered = new();
 
         [SerializeField]
-        private UnityEvent<SceneUnloadEventArgs> onUnloadEntered =
-            new UnityEvent<SceneUnloadEventArgs>();
+        private UnityEvent<SceneUnloadEventArgs> onUnloadExited = new();
 
         [SerializeField]
-        private UnityEvent<SceneUnloadEventArgs> onUnloadExited =
-            new UnityEvent<SceneUnloadEventArgs>();
+        private UnityEvent<SceneActivateEventArgs> onActivateEntered = new();
 
         [SerializeField]
-        private UnityEvent<SceneActivateEventArgs> onActivateEntered =
-            new UnityEvent<SceneActivateEventArgs>();
-
-        [SerializeField]
-        private UnityEvent<SceneActivateEventArgs> onActivateExited =
-            new UnityEvent<SceneActivateEventArgs>();
-
-        #endregion
-
-        #region Public Events
+        private UnityEvent<SceneActivateEventArgs> onActivateExited = new();
 
         public event SceneLoadEvent OnLoadEntered;
 
@@ -59,11 +45,7 @@ namespace CHARK.ScriptableScenes.Events
 
         public event SceneActivateEvent OnActivateExited;
 
-        #endregion
-
-        #region Internal Methods
-
-        internal void RaiseLoadEntered(BaseScriptableScene scene)
+        internal void RaiseLoadEntered(ScriptableScene scene)
         {
             var args = new SceneLoadEventArgs(scene);
             RaiseLoadEntered(args);
@@ -82,7 +64,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseLoadExited(BaseScriptableScene scene)
+        internal void RaiseLoadExited(ScriptableScene scene)
         {
             var args = new SceneLoadEventArgs(scene);
             RaiseLoadExited(args);
@@ -101,7 +83,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseLoadProgress(BaseScriptableScene scene, float progress)
+        internal void RaiseLoadProgress(ScriptableScene scene, float progress)
         {
             var args = new SceneLoadProgressEventArgs(scene, progress);
             RaiseLoadProgress(args);
@@ -120,7 +102,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseUnloadEntered(BaseScriptableScene scene)
+        internal void RaiseUnloadEntered(ScriptableScene scene)
         {
             var args = new SceneUnloadEventArgs(scene);
             RaiseUnloadEntered(args);
@@ -139,7 +121,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseUnloadExited(BaseScriptableScene scene)
+        internal void RaiseUnloadExited(ScriptableScene scene)
         {
             var args = new SceneUnloadEventArgs(scene);
             RaiseUnloadExited(args);
@@ -158,7 +140,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseActivateEntered(BaseScriptableScene scene)
+        internal void RaiseActivateEntered(ScriptableScene scene)
         {
             var args = new SceneActivateEventArgs(scene);
             RaiseActivateEntered(args);
@@ -177,7 +159,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseActivateExited(BaseScriptableScene scene)
+        internal void RaiseActivateExited(ScriptableScene scene)
         {
             var args = new SceneActivateEventArgs(scene);
             RaiseActivateExited(args);
@@ -195,7 +177,5 @@ namespace CHARK.ScriptableScenes.Events
                 Debug.LogError(exception);
             }
         }
-
-        #endregion
     }
 }

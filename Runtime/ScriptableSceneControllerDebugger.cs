@@ -14,23 +14,13 @@ namespace CHARK.ScriptableScenes
     [RequireComponent(typeof(ScriptableSceneController))]
     internal sealed class ScriptableSceneControllerDebugger : MonoBehaviour
     {
-        #region Editor Fields
-
         [SerializeField]
         private bool isDebugCollectionEvents = true;
 
         [SerializeField]
         private bool isDebugSceneEvents = true;
 
-        #endregion
-
-        #region Private Fields
-
         private ScriptableSceneController controller;
-
-        #endregion
-
-        #region Unity Lifecycle
 
         private void Awake()
         {
@@ -46,10 +36,6 @@ namespace CHARK.ScriptableScenes
         {
             RemoveListeners();
         }
-
-        #endregion
-
-        #region Private Methods
 
         private void AddListeners()
         {
@@ -95,10 +81,6 @@ namespace CHARK.ScriptableScenes
             sceneEvents.OnActivateExited -= DebugActivateExited;
         }
 
-        #endregion
-
-        #region Private Collection Debug Methods
-
         private void DebugLoadEntered(CollectionLoadEventArgs args)
         {
             Log(
@@ -139,10 +121,6 @@ namespace CHARK.ScriptableScenes
                 $"Name: {args.Collection.Name}"
             );
         }
-
-        #endregion
-
-        #region Private Scene Debug Methods
 
         private void DebugLoadEntered(SceneLoadEventArgs args)
         {
@@ -200,19 +178,21 @@ namespace CHARK.ScriptableScenes
             );
         }
 
-        #endregion
-
-        #region Private Methods
-
         private void Log(string title, params string[] details)
         {
+#if UNITY_EDITOR
             Debug.Log(
                 $"<b><color=cyan>{title}</color></b>\n" +
                 $"{string.Join(", ", details)}",
                 this
             );
+#else
+            Debug.Log(
+                $"{title}\n" +
+                $"{string.Join(", ", details)}",
+                this
+            );
+#endif
         }
-
-        #endregion
     }
 }
