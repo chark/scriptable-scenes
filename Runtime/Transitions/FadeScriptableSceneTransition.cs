@@ -12,28 +12,49 @@ namespace CHARK.ScriptableScenes.Transitions
     )]
     internal sealed class FadeScriptableSceneTransition : ScriptableSceneTransition
     {
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Alpha", Expanded = true)]
+        [Sirenix.OdinInspector.PropertyRange(0f, 1f)]
+#else
         [Header("Alpha")]
-        [Tooltip("Canvas alpha which is used when the canvas is faded in")]
         [Range(0f, 1f)]
+#endif
+        [Tooltip("Canvas alpha which is used when the canvas is faded in")]
         [SerializeField]
         private float fadeInAlpha = 1.0f;
 
-        [Tooltip("Canvas alpha which is used when the canvas is faded out")]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Alpha", Expanded = true)]
+        [Sirenix.OdinInspector.PropertyRange(0f, 1f)]
+#else
         [Range(0f, 1f)]
+#endif
+        [Tooltip("Canvas alpha which is used when the canvas is faded out")]
         [SerializeField]
         private float fadeOutAlpha;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Timings", Expanded = true)]
+#else
         [Header("Timings")]
+#endif
         [Tooltip("Amount of seconds to wait before fading out the canvas")]
         [Min(0f)]
         [SerializeField]
         private float transitionDelaySeconds = 2.0f;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Timings", Expanded = true)]
+#endif
         [Tooltip("Time taken to fade in the canvas")]
         [Min(0f)]
         [SerializeField]
         private float fadeInDurationSeconds = 0.5f;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Timings", Expanded = true)]
+#endif
         [Tooltip("Time taken to fade out the canvas")]
         [Min(0f)]
         [SerializeField]
