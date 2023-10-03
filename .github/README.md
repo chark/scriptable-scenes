@@ -1,6 +1,6 @@
 # Scriptable Scenes
 
-:warning: **this is a preview package and might change at any time!**
+:warning: **Warning, this is a preview package and might change at any time!**
 
 [![Unity 2022.3+](https://img.shields.io/badge/unity-2022.3%2B-blue.svg)](https://unity3d.com/get-unity/download)
 [![Actions Status](https://github.com/chark/scriptable-scenes/workflows/CI/badge.svg)](https://github.com/chark/scriptable-scenes/actions)
