@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CHARK.ScriptableScenes
+namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
 {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
