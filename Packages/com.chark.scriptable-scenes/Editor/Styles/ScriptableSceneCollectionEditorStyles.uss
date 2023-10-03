@@ -1,0 +1,30 @@
+/* Help box styling */
+ScriptableSceneCollectionStatus {
+  margin-top: 4px;
+}
+
+ScriptableSceneCollectionStatus HelpBox {
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+/* Action container styling */
+VisualElement.actions-container {
+  margin-top: 8px;
+}
+
+VisualElement.actions-container Label {
+  -unity-font-style: bold;
+  margin-bottom: 2px;
+}
+
+/* Action styling */
+ScriptableSceneCollectionActions {
+  display: flex;
+  flex-direction: row;
+}
+
+ScriptableSceneCollectionActions Button {
+  flex-grow: 1;
+  margin: 0;
+}

@@ -5,13 +5,11 @@ using UnityEngine;
 namespace CHARK.ScriptableScenes.Transitions
 {
     /// <summary>
-    /// Transition used to transition between <see cref="BaseScriptableSceneCollection"/> when they are
+    /// Transition used to transition between <see cref="ScriptableSceneCollection"/> when they are
     /// loaded and unloaded.
     /// </summary>
-    public abstract class BaseScriptableSceneTransition : ScriptableObject
+    public abstract class ScriptableSceneTransition : ScriptableObject
     {
-        #region Public Events
-
         /// <summary>
         /// Invoked when <see cref="ShowRoutine"/> is starts.
         /// </summary>
@@ -32,12 +30,8 @@ namespace CHARK.ScriptableScenes.Transitions
         /// </summary>
         public event Action OnHideExited;
 
-        #endregion
-
-        #region Public Methods
-
         /// <returns>
-        /// Enumerator which transitions into the <see cref="BaseScriptableSceneCollection"/>. Called
+        /// Enumerator which transitions into the <see cref="ScriptableSceneCollection"/>. Called
         /// before the collection is loaded.
         /// </returns>
         public IEnumerator ShowRoutine()
@@ -54,7 +48,16 @@ namespace CHARK.ScriptableScenes.Transitions
         }
 
         /// <returns>
-        /// Enumerator which transitions out of the <see cref="BaseScriptableSceneCollection"/>. Called
+        /// Enumerator which delays the transition into the
+        /// <see cref="ScriptableSceneCollection"/>.
+        /// </returns>
+        public IEnumerator DelayRoutine()
+        {
+            yield return OnDelayRoutine();
+        }
+
+        /// <returns>
+        /// Enumerator which transitions out of the <see cref="ScriptableSceneCollection"/>. Called
         /// before the collection is unloaded.
         /// </returns>
         public IEnumerator HideRoutine()
@@ -70,14 +73,10 @@ namespace CHARK.ScriptableScenes.Transitions
             }
         }
 
-        #endregion
-
-        #region Protected Methods
-
         protected abstract IEnumerator OnShowRoutine();
 
-        protected abstract IEnumerator OnHideRoutine();
+        protected abstract IEnumerator OnDelayRoutine();
 
-        #endregion
+        protected abstract IEnumerator OnHideRoutine();
     }
 }

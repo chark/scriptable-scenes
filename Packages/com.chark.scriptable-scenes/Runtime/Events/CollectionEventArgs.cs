@@ -5,23 +5,15 @@
     /// </summary>
     public readonly struct CollectionLoadEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene collection which is loading.
         /// </summary>
-        public BaseScriptableSceneCollection Collection { get; }
+        public ScriptableSceneCollection Collection { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal CollectionLoadEventArgs(BaseScriptableSceneCollection collection)
+        internal CollectionLoadEventArgs(ScriptableSceneCollection collection)
         {
             Collection = collection;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -29,17 +21,15 @@
     /// </summary>
     public readonly struct CollectionLoadProgressEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene Collection which is loading.
         /// </summary>
-        public BaseScriptableSceneCollection Collection { get; }
+        public ScriptableSceneCollection Collection { get; }
 
         /// <summary>
         /// Scene which is loading.
         /// </summary>
-        public BaseScriptableScene Scene { get; }
+        public ScriptableScene Scene { get; }
 
         /// <summary>
         /// Load progress for <see cref="Collection"/> (goes from 0 to 1).
@@ -51,13 +41,9 @@
         /// </summary>
         public float SceneLoadProgress { get; }
 
-        #endregion
-
-        #region Internal Methods
-
         internal CollectionLoadProgressEventArgs(
-            BaseScriptableSceneCollection collection,
-            BaseScriptableScene scene,
+            ScriptableSceneCollection collection,
+            ScriptableScene scene,
             float collectionLoadProgress,
             float sceneLoadProgress
         )
@@ -67,8 +53,6 @@
             CollectionLoadProgress = collectionLoadProgress;
             SceneLoadProgress = sceneLoadProgress;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -76,22 +60,14 @@
     /// </summary>
     public readonly struct CollectionUnloadEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Collection which is unloading.
         /// </summary>
-        public BaseScriptableSceneCollection Collection { get; }
+        public ScriptableSceneCollection Collection { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal CollectionUnloadEventArgs(BaseScriptableSceneCollection collection)
+        internal CollectionUnloadEventArgs(ScriptableSceneCollection collection)
         {
             Collection = collection;
         }
-
-        #endregion
     }
 }

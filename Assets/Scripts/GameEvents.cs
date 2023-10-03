@@ -4,13 +4,7 @@ namespace CHARK.ScriptableScenes
 {
     internal static class GameEvents
     {
-        #region Private Fields
-
         private static ScriptableSceneController sceneController;
-
-        #endregion
-
-        #region Internal Methods
 
         internal static void RaiseReloadLoadedScene()
         {
@@ -22,7 +16,7 @@ namespace CHARK.ScriptableScenes
             sceneController.ReloadLoadedSceneCollection();
         }
 
-        internal static void RaiseLoadScene(BaseScriptableSceneCollection collection)
+        internal static void RaiseLoadScene(ScriptableSceneCollection collection)
         {
             if (sceneController == false)
             {
@@ -32,15 +26,9 @@ namespace CHARK.ScriptableScenes
             sceneController.LoadSceneCollection(collection);
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static void SetupSceneController()
         {
             sceneController = Object.FindObjectOfType<ScriptableSceneController>();
         }
-
-        #endregion
     }
 }

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CHARK.ScriptableScenes.Utilities;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace CHARK.ScriptableScenes.Editor.Utilities
 {
@@ -14,38 +16,56 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
     /// </summary>
     internal static class ScriptableSceneEditorUtilities
     {
-        #region Unity Lifecycle
+        private static readonly ISet<string> CurrentEnabledScenePaths = new HashSet<string>();
+        private static readonly ISet<string> EditorEnabledScenePaths = new HashSet<string>();
+
+        /// <summary>
+        /// Called when editor state changes and Scriptable Scene editors should reload. This event
+        /// will be called when:
+        /// <ul>
+        ///   <li>Play mode state changes</li>
+        ///   <li>Pause state changes</li>
+        ///   <li>Scene gets opened</li>
+        ///   <li>Build settings change</li>
+        ///   <li>An asset gets deleted or created</li>
+        /// </ul>
+        /// </summary>
+        internal static event Action OnEditorStateChanged;
 
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
-            EditorApplication.playModeStateChanged -= HandlePlayModeStateChanged;
-            EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+
+            EditorApplication.pauseStateChanged -= OnPauseStateChanged;
+            EditorApplication.pauseStateChanged += OnPauseStateChanged;
+
+            EditorSceneManager.sceneOpened -= OnSceneOpened;
+            EditorSceneManager.sceneOpened += OnSceneOpened;
+
+            EditorApplication.update -= OnEditorUpdated;
+            EditorApplication.update += OnEditorUpdated;
         }
-
-        #endregion
-
-        #region Internal Methods
 
         /// <returns>
         /// Collection of all <see cref="ScriptableSceneCollection"/> assets in the project.
         /// </returns>
-        internal static List<BaseScriptableSceneCollection> GetScriptableSceneCollections()
+        internal static IEnumerable<ScriptableSceneCollection> GetScriptableSceneCollections()
         {
             return AssetDatabase
-                .FindAssets($"t:{typeof(BaseScriptableSceneCollection)}")
+                .FindAssets($"t:{typeof(ScriptableSceneCollection)}")
                 .Select(AssetDatabase.GUIDToAssetPath)
-                .Select(AssetDatabase.LoadAssetAtPath<BaseScriptableSceneCollection>)
+                .Select(AssetDatabase.LoadAssetAtPath<ScriptableSceneCollection>)
                 .OrderBy(collection => collection.GetDisplayOrder())
-                .ThenBy(collection => collection.Name)
-                .ToList();
+                .ThenBy(collection => collection.Name);
         }
 
         /// <summary>
         /// Start playing the game using the given <paramref name="collection"/>.
         /// </summary>
         /// <param name="collection"></param>
-        internal static void Play(this BaseScriptableSceneCollection collection)
+        internal static void Play(this ScriptableSceneCollection collection)
         {
             if (Application.isPlaying)
             {
@@ -53,7 +73,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
                 return;
             }
 
-            var scriptableScenes = collection.Scenes.ToList();
+            var scriptableScenes = collection.Scenes;
             var scriptableScene = scriptableScenes.FirstOrDefault();
 
             if (scriptableScene == default)
@@ -71,7 +91,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         /// <summary>
         /// Load the given <paramref name="collection"/> during play mode.
         /// </summary>
-        internal static void Load(this BaseScriptableSceneCollection collection)
+        internal static void Load(this ScriptableSceneCollection collection)
         {
             if (Application.isPlaying == false)
             {
@@ -93,7 +113,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         /// <summary>
         /// Open the given <paramref name="collection"/> during edit mode.
         /// </summary>
-        internal static void Open(this BaseScriptableSceneCollection collection)
+        internal static void Open(this ScriptableSceneCollection collection)
         {
             if (Application.isPlaying)
             {
@@ -111,6 +131,8 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             {
                 var scriptableScene = scriptableScenes[index];
                 var scenePath = scriptableScene.ScenePath;
+
+                EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
                 Scene scene;
                 if (index == 0)
@@ -159,7 +181,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         /// The sort order at which to display the given <paramref name="collection"/> in Editor
         /// lists.
         /// </returns>
-        internal static int GetDisplayOrder(this BaseScriptableSceneCollection collection)
+        internal static int GetDisplayOrder(this ScriptableSceneCollection collection)
         {
             var key = GeDisplayOrderKey(collection);
             return EditorPrefs.GetInt(key, 0);
@@ -170,7 +192,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         /// lists.
         /// </summary>
         internal static void SetDisplayOrder(
-            this BaseScriptableSceneCollection collection,
+            this ScriptableSceneCollection collection,
             int order
         )
         {
@@ -179,95 +201,121 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
         }
 
         /// <returns>
-        /// <c>true</c> if the collection should be expanded in Editor foldouts or <c>false</c>
-        /// otherwise.
+        /// Status of given <paramref name="collection"/>.
         /// </returns>
-        internal static bool IsExpanded(this BaseScriptableSceneCollection collection)
+        internal static CollectionStatus GetStatus(this ScriptableSceneCollection collection)
         {
-            var key = GetIsExpandedKey(collection);
-            return EditorPrefs.GetBool(key, false);
-        }
-
-        /// <summary>
-        /// Set if the given <paramref name="collection"/> should be expanded in Editor foldouts.
-        /// </summary>
-        internal static void SetExpanded(
-            this BaseScriptableSceneCollection collection,
-            bool isExpanded
-        )
-        {
-            var key = GetIsExpandedKey(collection);
-            EditorPrefs.SetBool(key, isExpanded);
-        }
-
-        internal static Texture GetBuildStatusIcon(this BaseScriptableSceneCollection collection)
-        {
-            if (collection.IsAddedToBuildSettings())
+            if (collection.SceneCount == 0)
             {
-                return GetBuildStatusSuccessIcon();
+                return CollectionStatus.MissingScenes;
             }
 
-            return GetBuildStatusWarningIcon();
-        }
-
-        internal static Texture GetBuildStatusIcon(this BaseScriptableScene scene)
-        {
-            if (scene.IsAddedToBuildSettings())
-            {
-                return GetBuildStatusSuccessIcon();
-            }
-
-            return GetBuildStatusWarningIcon();
-        }
-
-        internal static bool IsAddedToBuildSettings(this BaseScriptableSceneCollection collection)
-        {
             var scenes = collection.Scenes;
             foreach (var scene in scenes)
             {
                 if (IsAddedToBuildSettings(scene) == false)
                 {
-                    return false;
+                    return CollectionStatus.InvalidBuildSettings;
                 }
             }
 
-            return true;
+            return CollectionStatus.Ready;
         }
 
-        internal static bool IsAddedToBuildSettings(this BaseScriptableScene scene)
+        /// <returns>
+        /// <c>true</c> if given <paramref name="scene"/> is added to
+        /// <see cref="EditorBuildSettings"/> and is enabled or <c>false</c> otherwise.
+        /// </returns>
+        internal static bool IsAddedToBuildSettings(this ScriptableScene scene)
         {
+            return EditorBuildSettings.scenes
+                .Where(otherScene => otherScene.enabled)
+                .Any(otherScene => otherScene.path == scene.ScenePath);
+        }
+
+        /// <summary>
+        /// Add given <paramref name="scene"/> to build settings.
+        /// </summary>
+        internal static void AddToBuildSettings(this ScriptableScene scene)
+        {
+            var scriptableScenePath = scene.ScenePath;
+            var scenes = EditorBuildSettings.scenes.ToList();
+
+            for (var index = 0; index < scenes.Count; index++)
+            {
+                var otherScene = scenes[index];
+                if (scriptableScenePath == otherScene.path)
+                {
+                    otherScene.enabled = true;
+                    scenes[index] = otherScene;
+                    EditorBuildSettings.scenes = scenes.ToArray();
+                    return;
+                }
+            }
+
             var scenePath = scene.ScenePath;
-            var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
-
-            return buildIndex >= 0;
+            scenes.Add(new EditorBuildSettingsScene(scenePath, true));
+            EditorBuildSettings.scenes = scenes.ToArray();
         }
 
-        internal static Texture GetBuildStatusSuccessIcon()
+        /// <summary>
+        /// Invoke <see cref="OnEditorStateChanged"/>.
+        /// </summary>
+        internal static void TriggerEditorStateChange()
         {
-            return GetIcon("P4_CheckOutRemote@2x");
+            OnEditorStateChanged?.Invoke();
         }
 
-        internal static Texture GetBuildStatusWarningIcon()
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            return GetIcon("P4_OutOfSync@2x");
+            if (state == PlayModeStateChange.EnteredEditMode)
+            {
+                EditorSceneManager.playModeStartScene = null;
+                ScriptableSceneUtilities.ClearSelectedCollection();
+            }
+
+            TriggerEditorStateChange();
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static void HandlePlayModeStateChanged(PlayModeStateChange change)
+        private static void OnPauseStateChanged(PauseState pauseState)
         {
-            if (change != PlayModeStateChange.EnteredEditMode)
+            TriggerEditorStateChange();
+        }
+
+        private static void OnSceneOpened(Scene scene, OpenSceneMode mode)
+        {
+            TriggerEditorStateChange();
+        }
+
+        private static void OnEditorUpdated()
+        {
+            // Trying to avoid garbage with this comparison. Not fully sure if this is worth the
+            // effort tho..
+            EditorEnabledScenePaths.Clear();
+
+            foreach (var scene in EditorBuildSettings.scenes)
+            {
+                if (scene.enabled)
+                {
+                    EditorEnabledScenePaths.Add(scene.path);
+                }
+            }
+
+            if (EditorEnabledScenePaths.SetEquals(CurrentEnabledScenePaths))
             {
                 return;
             }
 
-            EditorSceneManager.playModeStartScene = null;
-            ScriptableSceneUtilities.ClearSelectedCollection();
+            CurrentEnabledScenePaths.Clear();
+            foreach (var path in EditorEnabledScenePaths)
+            {
+                CurrentEnabledScenePaths.Add(path);
+            }
+
+            TriggerEditorStateChange();
         }
 
-        private static string GeDisplayOrderKey(BaseScriptableSceneCollection collection)
+        private static string GeDisplayOrderKey(ScriptableSceneCollection collection)
         {
             var prefix = typeof(ScriptableSceneUtilities).FullName;
             const string function = nameof(GeDisplayOrderKey);
@@ -275,24 +323,5 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
 
             return $"{prefix}_{function}_{target}";
         }
-
-        private static string GetIsExpandedKey(BaseScriptableSceneCollection collection)
-        {
-            var prefix = typeof(ScriptableSceneUtilities).FullName;
-            const string function = nameof(GetIsExpandedKey);
-            var target = collection.Guid;
-
-            return $"{prefix}_{function}_{target}";
-        }
-
-        private static Texture GetIcon(string iconName)
-        {
-            var iconContent = EditorGUIUtility.IconContent(iconName);
-            var iconImage = iconContent.image;
-
-            return iconImage;
-        }
-
-        #endregion
     }
 }

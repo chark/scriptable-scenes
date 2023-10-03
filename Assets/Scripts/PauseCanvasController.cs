@@ -7,11 +7,9 @@ namespace CHARK.ScriptableScenes
     [RequireComponent(typeof(GraphicRaycaster))]
     internal sealed class PauseCanvasController : MonoBehaviour
     {
-        #region Editor Fields
-
         [Header("Scenes")]
         [SerializeField]
-        private BaseScriptableSceneCollection menuSceneCollection;
+        private ScriptableSceneCollection menuSceneCollection;
 
         [Header("Buttons")]
         [SerializeField]
@@ -24,16 +22,8 @@ namespace CHARK.ScriptableScenes
         [SerializeField]
         private KeyCode pauseKey = KeyCode.Escape;
 
-        #endregion
-
-        #region Private Fields
-
         private GraphicRaycaster graphicRaycaster;
         private Canvas canvas;
-
-        #endregion
-
-        #region Unity Lifecycle
 
         private void Awake()
         {
@@ -73,10 +63,6 @@ namespace CHARK.ScriptableScenes
             }
         }
 
-        #endregion
-
-        #region Private Methods
-
         private static void OnRestartButtonClicked()
         {
             GameEvents.RaiseReloadLoadedScene();
@@ -107,7 +93,5 @@ namespace CHARK.ScriptableScenes
             graphicRaycaster.enabled = isVisible;
             canvas.enabled = isVisible;
         }
-
-        #endregion
     }
 }

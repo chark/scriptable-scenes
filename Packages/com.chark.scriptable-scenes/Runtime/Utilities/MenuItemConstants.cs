@@ -10,11 +10,21 @@ namespace CHARK.ScriptableScenes.Utilities
         /// <summary>
         /// Base menu item name for Window menu items.
         /// </summary>
-        public const string BaseWindowItemName = "Window/CHARK/Scriptable Scenes";
+        internal const string BaseWindowItemName = "Window/CHARK";
 
         /// <summary>
         /// Base menu item priority for Window menu items.
         /// </summary>
-        public const int BaseWindowPriority = -1000;
+        internal const int BaseWindowPriority = -1000;
+
+        /// <summary>
+        /// Base menu item name for Create asset menu items.
+        /// </summary>
+        internal const string BaseCreateItemName = "Assets/Create/CHARK/Scriptable Scenes";
+
+        /// <summary>
+        /// Base menu item priority for Create asset menu items.
+        /// </summary>
+        internal const int BaseCreateItemPriority = -1000;
     }
 }

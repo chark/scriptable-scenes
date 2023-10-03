@@ -5,23 +5,15 @@
     /// </summary>
     public readonly struct SceneLoadEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene which is loading.
         /// </summary>
-        public BaseScriptableScene Scene { get; }
+        public ScriptableScene Scene { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal SceneLoadEventArgs(BaseScriptableScene scene)
+        internal SceneLoadEventArgs(ScriptableScene scene)
         {
             Scene = scene;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -29,29 +21,21 @@
     /// </summary>
     public readonly struct SceneLoadProgressEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene which is loading.
         /// </summary>
-        public BaseScriptableScene Scene { get; }
+        public ScriptableScene Scene { get; }
 
         /// <summary>
         /// The progress <see cref="Scene"/> loading. Goes from 0 to 1 (inclusive).
         /// </summary>
         public float Progress { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal SceneLoadProgressEventArgs(BaseScriptableScene scene, float progress)
+        internal SceneLoadProgressEventArgs(ScriptableScene scene, float progress)
         {
             Scene = scene;
             Progress = progress;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -59,23 +43,15 @@
     /// </summary>
     public readonly struct SceneUnloadEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene which is unloading.
         /// </summary>
-        public BaseScriptableScene Scene { get; }
+        public ScriptableScene Scene { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal SceneUnloadEventArgs(BaseScriptableScene scene)
+        internal SceneUnloadEventArgs(ScriptableScene scene)
         {
             Scene = scene;
         }
-
-        #endregion
     }
 
     /// <summary>
@@ -83,22 +59,14 @@
     /// </summary>
     public readonly struct SceneActivateEventArgs
     {
-        #region Public Properties
-
         /// <summary>
         /// Scene which is being activated.
         /// </summary>
-        public BaseScriptableScene Scene { get; }
+        public ScriptableScene Scene { get; }
 
-        #endregion
-
-        #region Internal Methods
-
-        internal SceneActivateEventArgs(BaseScriptableScene scene)
+        internal SceneActivateEventArgs(ScriptableScene scene)
         {
             Scene = scene;
         }
-
-        #endregion
     }
 }

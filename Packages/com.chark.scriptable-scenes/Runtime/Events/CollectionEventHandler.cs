@@ -10,43 +10,32 @@ namespace CHARK.ScriptableScenes.Events
     [Serializable]
     internal sealed class CollectionEventHandler : ICollectionEventHandler
     {
-        #region Editor Fields
+        [SerializeField]
+        private UnityEvent<CollectionLoadEventArgs> onLoadEntered = new();
 
         [SerializeField]
-        private UnityEvent<CollectionLoadEventArgs> onLoadEntered =
-            new UnityEvent<CollectionLoadEventArgs>();
+        private UnityEvent<CollectionLoadEventArgs> onLoadExited = new();
 
         [SerializeField]
-        private UnityEvent<CollectionLoadEventArgs> onLoadExited =
-            new UnityEvent<CollectionLoadEventArgs>();
+        private UnityEvent<CollectionLoadProgressEventArgs> onLoadProgress = new();
 
         [SerializeField]
-        private UnityEvent<CollectionLoadProgressEventArgs> onLoadProgress =
-            new UnityEvent<CollectionLoadProgressEventArgs>();
+        private UnityEvent<CollectionUnloadEventArgs> onUnloadEntered = new();
 
         [SerializeField]
-        private UnityEvent<CollectionUnloadEventArgs> onUnloadEntered =
-            new UnityEvent<CollectionUnloadEventArgs>();
+        private UnityEvent<CollectionUnloadEventArgs> onUnloadExited = new();
 
         [SerializeField]
-        private UnityEvent<CollectionUnloadEventArgs> onUnloadExited =
-            new UnityEvent<CollectionUnloadEventArgs>();
+        private UnityEvent onShowTransitionEntered = new();
 
         [SerializeField]
-        private UnityEvent onShowTransitionEntered = new UnityEvent();
+        private UnityEvent onShowTransitionExited = new();
 
         [SerializeField]
-        private UnityEvent onShowTransitionExited = new UnityEvent();
+        private UnityEvent onHideTransitionEntered = new();
 
         [SerializeField]
-        private UnityEvent onHideTransitionEntered = new UnityEvent();
-
-        [SerializeField]
-        private UnityEvent onHideTransitionExited = new UnityEvent();
-
-        #endregion
-
-        #region Public Events
+        private UnityEvent onHideTransitionExited = new();
 
         public event CollectionLoadEvent OnLoadEntered;
 
@@ -66,11 +55,7 @@ namespace CHARK.ScriptableScenes.Events
 
         public event CollectionTransitionEvent OnHideTransitionExited;
 
-        #endregion
-
-        #region Internal Methods
-
-        internal void RaiseLoadEntered(BaseScriptableSceneCollection collection)
+        internal void RaiseLoadEntered(ScriptableSceneCollection collection)
         {
             var args = new CollectionLoadEventArgs(collection);
             RaiseLoadEntered(args);
@@ -89,7 +74,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseLoadExited(BaseScriptableSceneCollection collection)
+        internal void RaiseLoadExited(ScriptableSceneCollection collection)
         {
             var args = new CollectionLoadEventArgs(collection);
             RaiseLoadExited(args);
@@ -109,8 +94,8 @@ namespace CHARK.ScriptableScenes.Events
         }
 
         internal void RaiseLoadProgress(
-            BaseScriptableSceneCollection collection,
-            BaseScriptableScene scene,
+            ScriptableSceneCollection collection,
+            ScriptableScene scene,
             float collectionProgress,
             float sceneProgress
         )
@@ -138,7 +123,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseUnloadEntered(BaseScriptableSceneCollection collection)
+        internal void RaiseUnloadEntered(ScriptableSceneCollection collection)
         {
             var args = new CollectionUnloadEventArgs(collection);
             RaiseUnloadEntered(args);
@@ -157,7 +142,7 @@ namespace CHARK.ScriptableScenes.Events
             }
         }
 
-        internal void RaiseUnloadExited(BaseScriptableSceneCollection collection)
+        internal void RaiseUnloadExited(ScriptableSceneCollection collection)
         {
             var args = new CollectionUnloadEventArgs(collection);
             RaiseUnloadExited(args);
@@ -228,7 +213,5 @@ namespace CHARK.ScriptableScenes.Events
                 Debug.LogError(exception);
             }
         }
-
-        #endregion
     }
 }

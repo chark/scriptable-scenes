@@ -10,21 +10,21 @@ namespace CHARK.ScriptableScenes.Utilities
         /// <summary>
         /// Base file name (prefix).
         /// </summary>
-        public const string BaseFileName = "New ";
+        internal const string BaseFileName = "New ";
 
         /// <summary>
         /// Base menu name (sub-menu category).
         /// </summary>
-        public const string BaseMenuName = "CHARK/Scriptable Scenes";
+        internal const string BaseMenuName = "CHARK/Scriptable Scenes";
 
         /// <summary>
         /// Base menu order.
         /// </summary>
-        public const int BaseOrder = -1000;
+        internal const int BaseOrder = -1000;
 
         /// <summary>
         /// Order of transition menu items.
         /// </summary>
-        public const int TransitionOrder = BaseOrder + 20;
+        internal const int TransitionOrder = BaseOrder + 20;
     }
 }

@@ -5,14 +5,8 @@ namespace CHARK.ScriptableScenes.Tests
 {
     internal static class ReflectionUtilities
     {
-        #region Private Fields
-
         private const BindingFlags PrivateFieldBindingFlags =
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-        #endregion
-
-        #region Internal Methods
 
         /// <summary>
         /// Set private field value with give name on this object.
@@ -84,7 +78,5 @@ namespace CHARK.ScriptableScenes.Tests
             field = info;
             return info != null;
         }
-
-        #endregion
     }
 }

@@ -2,30 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace CHARK.ScriptableScenes.Tests
 {
     internal static class ScriptableSceneTestUtilities
     {
-        #region Helper Classes
-
         /// <summary>
         /// Defines how a scene should be created.
         /// </summary>
         internal class SceneDefinition
         {
-            internal int BuildIndex { get; set; }
+            internal string ScenePath => scene.name;
+
+            private Scene scene;
+
+            public SceneDefinition(Scene scene)
+            {
+                this.scene = scene;
+            }
         }
 
-        #endregion
-
-        #region Private Fields
-
         private const int MaxCollectionLoadWaitTicks = 120;
-
-        #endregion
-
-        #region Internal Methods
+        private const string TestSceneNameFormat = "{0}_{1}";
 
         /// <returns>
         /// New controller which can be used to load scenes.
@@ -39,9 +38,20 @@ namespace CHARK.ScriptableScenes.Tests
         }
 
         /// <returns>
+        /// Scene which can be used in tests.
+        /// </returns>
+        internal static Scene CreateTestScene(string sceneName)
+        {
+            var sceneGuid = Guid.NewGuid().ToString();
+            var sceneNameFormatted = string.Format(TestSceneNameFormat, sceneName, sceneGuid);
+
+            return SceneManager.CreateScene(sceneNameFormatted);
+        }
+
+        /// <returns>
         /// New collection with a set of scenes specified in <paramref name="sceneDefinitions"/>.
         /// </returns>
-        internal static BaseScriptableSceneCollection CreateCollection(
+        internal static ScriptableSceneCollection CreateCollection(
             params SceneDefinition[] sceneDefinitions
         )
         {
@@ -49,12 +59,12 @@ namespace CHARK.ScriptableScenes.Tests
             collection.SetField("name", $"Test Collection ({Guid.NewGuid().ToString()})");
 
             var scriptableScenes = collection
-                .GetValue<List<BaseScriptableScene>>("scriptableScenes");
+                .GetValue<List<ScriptableScene>>("scriptableScenes");
 
             foreach (var sceneDefinition in sceneDefinitions)
             {
                 var scene = ScriptableObject.CreateInstance<ScriptableScene>();
-                scene.SetField("sceneBuildIndex", sceneDefinition.BuildIndex);
+                scene.SetField("scenePath", sceneDefinition.ScenePath);
 
                 scriptableScenes.Add(scene);
             }
@@ -68,7 +78,7 @@ namespace CHARK.ScriptableScenes.Tests
         /// </returns>
         internal static IEnumerator LoadRoutine(
             this ScriptableSceneController controller,
-            BaseScriptableSceneCollection collection
+            ScriptableSceneCollection collection
         )
         {
             controller.LoadSceneCollection(collection);
@@ -111,7 +121,5 @@ namespace CHARK.ScriptableScenes.Tests
                 return false;
             });
         }
-
-        #endregion
     }
 }

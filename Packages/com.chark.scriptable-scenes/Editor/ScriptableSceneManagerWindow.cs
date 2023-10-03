@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using CHARK.ScriptableScenes.Editor.Elements;
 using CHARK.ScriptableScenes.Editor.Utilities;
 using CHARK.ScriptableScenes.Utilities;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CHARK.ScriptableScenes.Editor
 {
@@ -13,50 +13,26 @@ namespace CHARK.ScriptableScenes.Editor
     /// </summary>
     internal sealed class ScriptableSceneManagerWindow : EditorWindow
     {
-        #region Editor Fields
-
         [SerializeField]
-        private Vector2 scrollPosition;
+        private StyleSheet styleSheet;
 
-        #endregion
+        private readonly List<ScriptableSceneCollection> sceneCollections = new();
 
-        #region Private Fields
-
-        private static readonly GUILayoutOption PlayModeButtonWidth = GUILayout.Width(30f);
-
-        private const float CollectionFieldMargin = 2f;
-        private const float CollectionMargin = 8f;
-
-        private const float CollectionTitleStatusWidth = 20f;
-        private const float CollectionTitleButtonMargin = 2f;
-        private const float CollectionTitleButtonWidth = 40f;
-
-        private const float CollectionTitleActionsWidth =
-            CollectionTitleStatusWidth +
-            CollectionTitleButtonWidth * 3f +
-            CollectionTitleButtonMargin * 2f;
-
-        private const int CollectionFieldCount = 3;
-
-        private List<BaseScriptableSceneCollection> sceneCollections;
-        private ReorderableList sceneCollectionsList;
-
-        #endregion
-
-        #region Unity Lifecycle
+        private ScriptableSceneCollectionGlobalActions globalActionsElement;
+        private ScriptableSceneCollectionList collectionListElement;
 
         [MenuItem(
-            MenuItemConstants.BaseWindowItemName + "/Scriptable Scene Manager",
+            MenuItemConstants.BaseWindowItemName + "/Scriptable Scenes",
             priority = MenuItemConstants.BaseWindowPriority
         )]
         private static void ShowWindow()
         {
             var sceneManagerWindow = GetWindow<ScriptableSceneManagerWindow>();
-            sceneManagerWindow.titleContent = new GUIContent("Scriptable Scene Manager");
+            sceneManagerWindow.titleContent = new GUIContent("Scriptable Scenes");
 
             var minSize = sceneManagerWindow.minSize;
-            minSize.x = 200f;
-            minSize.y = 200f;
+            minSize.x = 250f;
+            minSize.y = 100f;
             sceneManagerWindow.minSize = minSize;
 
             sceneManagerWindow.Show();
@@ -64,360 +40,92 @@ namespace CHARK.ScriptableScenes.Editor
 
         private void OnEnable()
         {
-            SetupWindow();
+            ScriptableSceneEditorUtilities.OnEditorStateChanged += OnEditorStateChanged;
+
+            InitializeUIElements();
+            BindUIElements();
         }
 
-        private void OnGUI()
+        private void OnDisable()
         {
-            EditorGUILayout.Space();
-            DrawPlayModeControls();
-            DrawSceneCollections();
+            ScriptableSceneEditorUtilities.OnEditorStateChanged -= OnEditorStateChanged;
         }
 
-        #endregion
-
-        #region Internal Methods
-
-        /// <summary>
-        /// Setup (reload) scene collections assigned to this window.
-        /// </summary>
-        internal void SetupWindow()
+        private void InitializeUIElements()
         {
-            sceneCollections = ScriptableSceneEditorUtilities.GetScriptableSceneCollections();
-            sceneCollectionsList = CreateSceneCollectionList(sceneCollections);
+            globalActionsElement = new ScriptableSceneCollectionGlobalActions();
+            globalActionsElement.OnStopButtonClicked += OnGlobalActionsStopButtonClicked;
+            globalActionsElement.OnPauseButtonClicked += OnGlobalActionsPauseButtonClicked;
+            globalActionsElement.OnStepButtonClicked += OnGlobalActionsStepButtonClicked;
+
+            collectionListElement = new ScriptableSceneCollectionList(sceneCollections);
+            collectionListElement.OnSortOrderChanged += CollectionListElementSortOrderChanged;
+            collectionListElement.OnOpenButtonClicked += CollectionListElementOpenButtonClicked;
+            collectionListElement.OnPlayButtonClicked += CollectionListElementPlayButtonClicked;
+            collectionListElement.OnLoadButtonClicked += CollectionListElementLoadButtonClicked;
+
+            rootVisualElement.styleSheets.Add(styleSheet);
+            rootVisualElement.AddToClassList("window-content");
+            rootVisualElement.Add(globalActionsElement);
+            rootVisualElement.Add(collectionListElement);
         }
 
-        #endregion
-
-        #region Private Play Mode Control Methods
-
-        private static void DrawPlayModeControls()
+        private void OnEditorStateChanged()
         {
-            var isEnabled = GUI.enabled;
-            GUI.enabled = Application.isPlaying && isEnabled;
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-
-            DrawStopGameButton();
-            DrawPauseGameButton();
-            DrawStepGameButton();
-
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
-
-            GUI.enabled = isEnabled;
+            BindUIElements();
         }
 
-        private static void DrawStopGameButton()
+        private static void OnGlobalActionsStopButtonClicked()
         {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "PreMatQuad",
-                "Stop game"
-            );
+            ScriptableSceneEditorUtilities.StopGame();
+        }
 
-            if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
+        private static void OnGlobalActionsPauseButtonClicked()
+        {
+            ScriptableSceneEditorUtilities.SetPausedGame(EditorApplication.isPaused == false);
+        }
+
+        private static void OnGlobalActionsStepButtonClicked()
+        {
+            ScriptableSceneEditorUtilities.StepGame();
+        }
+
+        private void CollectionListElementSortOrderChanged()
+        {
+            for (var index = 0; index < sceneCollections.Count; index++)
             {
-                ScriptableSceneEditorUtilities.StopGame();
-            }
-        }
-
-        private static void DrawPauseGameButton()
-        {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "PauseButton",
-                "Pause game"
-            );
-
-            var isPausedOld = EditorApplication.isPaused;
-            var isPausedNew = ScriptableSceneGUI.Toggle(
-                isPausedOld,
-                iconContent,
-                "Button",
-                PlayModeButtonWidth
-            );
-
-            if (isPausedOld != isPausedNew)
-            {
-                ScriptableSceneEditorUtilities.SetPausedGame(isPausedNew);
-            }
-        }
-
-        private static void DrawStepGameButton()
-        {
-            // TODO: use scene utils.
-            var iconContent = EditorGUIUtility.IconContent(
-                "StepButton",
-                "Step game forward by one frame"
-            );
-
-            if (ScriptableSceneGUI.Button(iconContent, PlayModeButtonWidth))
-            {
-                ScriptableSceneEditorUtilities.StepGame();
-            }
-        }
-
-        #endregion
-
-        #region Private Scene Collection Methods
-
-        private void DrawSceneCollections()
-        {
-            var margins = GetMarginStyle();
-            EditorGUILayout.BeginHorizontal(margins);
-
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
-            sceneCollectionsList.DoLayoutList();
-            EditorGUILayout.EndScrollView();
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private static GUIStyle GetMarginStyle()
-        {
-            var style = new GUIStyle(EditorStyles.inspectorDefaultMargins);
-            var padding = style.padding;
-            padding.left = 4;
-            return style;
-        }
-
-        private static ReorderableList CreateSceneCollectionList(
-            List<BaseScriptableSceneCollection> collections
-        )
-        {
-            var list = new ReorderableList(
-                collections,
-                typeof(BaseScriptableSceneCollection),
-                true,
-                false,
-                false,
-                false
-            )
-            {
-                elementHeightCallback = OnGetElementHeight,
-                onReorderCallback = OnReorder,
-                drawElementCallback = OnDrawElement
-            };
-
-            // ReSharper disable once InconsistentNaming
-            float OnGetElementHeight(int index)
-            {
-                var collection = collections[index];
-                return GetElementHeight(collection);
-            }
-
-            // ReSharper disable once InconsistentNaming
-            void OnReorder(ReorderableList reorderableList)
-            {
-                for (var index = 0; index < collections.Count; index++)
+                var collection = sceneCollections[index];
+                if (collection.GetDisplayOrder() == index)
                 {
-                    var collection = collections[index];
-                    UpdateDisplayOrder(collection, index);
+                    continue;
                 }
-            }
 
-            // ReSharper disable once InconsistentNaming
-            void OnDrawElement(Rect rect, int index, bool isActive, bool isFocused)
-            {
-                var collection = collections[index];
-                DrawSceneCollection(rect, collection);
-            }
-
-            return list;
-        }
-
-        private static float GetElementHeight(BaseScriptableSceneCollection collection)
-        {
-            var isExpanded = collection.IsExpanded();
-            if (isExpanded == false)
-            {
-                return EditorGUIUtility.singleLineHeight + CollectionFieldMargin;
-            }
-
-            return (EditorGUIUtility.singleLineHeight + CollectionFieldMargin)
-                   * CollectionFieldCount
-                   + CollectionTitleButtonMargin
-                   + CollectionMargin;
-        }
-
-        private static void UpdateDisplayOrder(BaseScriptableSceneCollection collection, int index)
-        {
-            if (collection.GetDisplayOrder() == index)
-            {
-                return;
-            }
-
-            collection.SetDisplayOrder(index);
-        }
-
-        private static void DrawSceneCollection(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var fieldYOffset = EditorGUIUtility.singleLineHeight + CollectionFieldMargin;
-            var fieldRect = new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight);
-
-            var isExpanded = DrawTitle(fieldRect, collection);
-            if (isExpanded == false)
-            {
-                return;
-            }
-
-            EditorGUI.indentLevel++;
-
-            fieldRect.y += fieldYOffset;
-            DrawAssetField(fieldRect, collection);
-
-            fieldRect.y += fieldYOffset;
-            DrawSceneCountField(fieldRect, collection);
-
-            // TODO: unsure if wanna show controls inside the foldout or next to it.
-            // fieldRect.y += fieldYOffset + CollectionListControlsExtraMargin;
-            // DrawControls(EditorGUI.IndentedRect(fieldRect), collection);
-
-            EditorGUI.indentLevel--;
-        }
-
-        private static bool DrawTitle(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var name = collection.Name;
-            var prettyName = ObjectNames.NicifyVariableName(name);
-
-            var isExpanded = collection.IsExpanded();
-
-            EditorGUI.BeginChangeCheck();
-
-            var style = GetFoldoutTitleStyle();
-
-            rect.width -= CollectionTitleActionsWidth;
-            isExpanded = EditorGUI.Foldout(rect, isExpanded, prettyName, true, style);
-
-            rect.x += rect.width;
-            DrawStatusIndicator(rect, collection);
-
-            rect.x += CollectionTitleStatusWidth;
-            DrawControls(rect, collection);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                collection.SetExpanded(isExpanded);
-            }
-
-            return isExpanded;
-        }
-
-        private static void DrawStatusIndicator(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var icon = collection.GetBuildStatusIcon();
-            var tooltip = collection.IsAddedToBuildSettings()
-                ? "All scenes in this collection are added to Build Settings"
-                : "One of the scenes in this collection are missing from Build Settings";
-
-            var content = new GUIContent(icon, tooltip);
-
-            rect.width = CollectionTitleStatusWidth;
-            ScriptableSceneGUI.LabelField(rect, content);
-        }
-
-        private static void DrawControls(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var isAddedScenes = collection.Scenes.Any();
-            var isEnabled = GUI.enabled;
-
-            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying == false;
-
-            rect.width = CollectionTitleButtonWidth;
-            DrawOpenButton(rect, collection);
-
-            rect.x += CollectionTitleButtonWidth + CollectionTitleButtonMargin;
-            DrawPlayButton(rect, collection);
-
-            GUI.enabled = isEnabled && isAddedScenes && Application.isPlaying;
-
-            rect.x += CollectionTitleButtonWidth + CollectionTitleButtonMargin;
-            DrawLoadButton(rect, collection);
-
-            GUI.enabled = isEnabled;
-        }
-
-        private static void DrawAssetField(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            ScriptableSceneGUI.ObjectField(rect, "Scene Collection", collection, false);
-        }
-
-        private static void DrawSceneCountField(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            var title = new GUIContent(
-                "Scene Count",
-                "Number of scenes added to this collection"
-            );
-
-            ScriptableSceneGUI.IntField(rect, title, collection.SceneCount);
-        }
-
-        private static void DrawOpenButton(Rect rect, BaseScriptableSceneCollection collection)
-        {
-            // TODO: unsure if wanna use icons or not
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "Folder Icon",
-            //     "Open scene collection"
-            // );
-
-            var content = new GUIContent(
-                "Open",
-                "Open all scenes in selected Scene Collection"
-            );
-
-            if (ScriptableSceneGUI.Button(rect, content))
-            {
-                collection.Open();
+                collection.SetDisplayOrder(index);
             }
         }
 
-        private static void DrawPlayButton(Rect rect, BaseScriptableSceneCollection collection)
+        private static void CollectionListElementOpenButtonClicked(ScriptableSceneCollection collection)
         {
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "PlayButton",
-            //     "Run game in selected scene collection"
-            // );
-
-            var content = new GUIContent(
-                "Play",
-                "Play the game in selected Scene Collection"
-            );
-
-            if (ScriptableSceneGUI.Button(rect, content))
-            {
-                collection.Play();
-            }
+            collection.Open();
         }
 
-        private static void DrawLoadButton(Rect rect, BaseScriptableSceneCollection collection)
+        private static void CollectionListElementPlayButtonClicked(ScriptableSceneCollection collection)
         {
-            // var iconContent = EditorGUIUtility.IconContent(
-            //     "SceneLoadIn",
-            //     "Load scene collection (runtime)"
-            // );
-
-            var content = new GUIContent(
-                "Load",
-                "Load scene collection through the Scene Controller (runtime)"
-            );
-
-            if (ScriptableSceneGUI.Button(rect, content))
-            {
-                collection.Load();
-            }
+            collection.Play();
         }
 
-        private static GUIStyle GetFoldoutTitleStyle()
+        private static void CollectionListElementLoadButtonClicked(ScriptableSceneCollection collection)
         {
-            return new GUIStyle(EditorStyles.foldout)
-            {
-                fontStyle = FontStyle.Bold
-            };
+            collection.Load();
         }
 
-        #endregion
+        private void BindUIElements()
+        {
+            globalActionsElement?.Bind();
+
+            sceneCollections.Clear();
+            sceneCollections.AddRange(ScriptableSceneEditorUtilities.GetScriptableSceneCollections());
+            collectionListElement?.RefreshItems();
+        }
     }
 }

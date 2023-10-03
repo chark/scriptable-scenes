@@ -6,8 +6,6 @@ namespace CHARK.ScriptableScenes
 {
     internal sealed class LoadingCanvasController : MonoBehaviour
     {
-        #region Editor Fields
-
         [Header("Scenes")]
         [SerializeField]
         private ScriptableSceneController sceneController;
@@ -18,10 +16,6 @@ namespace CHARK.ScriptableScenes
 
         [SerializeField]
         private TMP_Text loadingPercentageText;
-
-        #endregion
-
-        #region Unity Lifecycle
 
         private void OnEnable()
         {
@@ -37,10 +31,6 @@ namespace CHARK.ScriptableScenes
             collectionEvents.OnLoadProgress -= OnLoadProgress;
         }
 
-        #endregion
-
-        #region Private Methods
-
         private void OnLoadEntered(CollectionLoadEventArgs args)
         {
             loadingStateText.text = "";
@@ -55,7 +45,5 @@ namespace CHARK.ScriptableScenes
             loadingStateText.text = $"Loading scene {sceneName}...";
             loadingPercentageText.text = $"{percentage}%";
         }
-
-        #endregion
     }
 }

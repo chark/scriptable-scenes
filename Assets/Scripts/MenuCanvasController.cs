@@ -6,11 +6,9 @@ namespace CHARK.ScriptableScenes
 {
     internal sealed class MenuCanvasController : MonoBehaviour
     {
-        #region Editor Fields
-
         [Header("Scenes")]
         [SerializeField]
-        private BaseScriptableSceneCollection playSceneCollection;
+        private ScriptableSceneCollection playSceneCollection;
 
         [Header("Buttons")]
         [SerializeField]
@@ -18,10 +16,6 @@ namespace CHARK.ScriptableScenes
 
         [SerializeField]
         private Button exitButton;
-
-        #endregion
-
-        #region Unity Lifecycle
 
         private void OnEnable()
         {
@@ -34,10 +28,6 @@ namespace CHARK.ScriptableScenes
             playButton.onClick.RemoveListener(HandlePlayButtonClick);
             exitButton.onClick.RemoveListener(HandleExitButtonClick);
         }
-
-        #endregion
-
-        #region Private Methods
 
         private void HandlePlayButtonClick()
         {
@@ -52,7 +42,5 @@ namespace CHARK.ScriptableScenes
             Application.Quit();
 #endif
         }
-
-        #endregion
     }
 }
