@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b14ae577063c44c19b953d1bcaa2f3ab, type: 3}
   m_Name: PlayScriptableSceneCollection
   m_EditorClassIdentifier: 
-  displayOrder: 1
   guid: b89cbd1957aa6b4429f43d8ae2f97658
+  prettyName: Gameplay
   transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
   scriptableScenes:
   - {fileID: 11400000, guid: ee9034e7b4fa2cb49bae58c037906c75, type: 2}
@@ -34,11 +34,26 @@ MonoBehaviour:
     onUnloadExited:
       m_PersistentCalls:
         m_Calls: []
+    onShowTransitionEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onShowTransitionExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onHideTransitionEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onHideTransitionExited:
+      m_PersistentCalls:
+        m_Calls: []
   sceneEvents:
     onLoadEntered:
       m_PersistentCalls:
         m_Calls: []
     onLoadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadProgress:
       m_PersistentCalls:
         m_Calls: []
     onUnloadEntered:

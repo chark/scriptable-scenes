@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: InvalidScriptableSceneCollection
   m_EditorClassIdentifier: 
   guid: e1479d29e3743a647b534c91fe4fa014
+  prettyName: Invalid
   transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
   scriptableScenes:
   - {fileID: 11400000, guid: ee9034e7b4fa2cb49bae58c037906c75, type: 2}
