@@ -22,14 +22,14 @@ jobs:
 
     - name: Checkout
       run: |
-        git branch -d ${{ github.event.inputs.branch }} &> /dev/null || echo the branch not found
-        git subtree split -P "$PKG_ROOT" -b ${{ github.event.inputs.branch }}
-        git checkout ${{ github.event.inputs.branch }}
+        git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
+        git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
+        git checkout '${{ github.event.inputs.branch }}'
 
-    - name: Rename Samples to Samples~
+    - name: Rename Assets/Samples to ${{ env.PKG_ROOT }}/Samples~
       run: |
-        mv "$PKG_ROOT/Samples" "$PKG_ROOT/Samples~"
+        mv 'Assets/Samples' '${{ env.PKG_ROOT }}/Samples~'
 
     - name: Push
       run: |
-        git push -f -u origin ${{ github.event.inputs.branch }}
+        git push -f -u origin '${{ github.event.inputs.branch }}'
