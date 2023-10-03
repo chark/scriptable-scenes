@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: SetupScriptableScene
   m_EditorClassIdentifier: 
-  sceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+  sceneAsset: {fileID: 102900000, guid: c00e09803251a2a46b3967ae9f563e58, type: 3}
   scenePath: Packages/com.chark.scriptable-scenes/Samples/MultipleScenes/Scenes/SetupScene.unity
   prettyName: Setup Scene
   isActivate: 1

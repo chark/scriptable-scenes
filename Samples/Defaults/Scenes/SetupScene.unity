@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 917569920}
   - component: {fileID: 917569919}
   - component: {fileID: 917569918}
-  - component: {fileID: 917569921}
+  - component: {fileID: 917569923}
   m_Layer: 0
   m_Name: LoadingCanvas
   m_TagString: Untagged
@@ -464,21 +464,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &917569921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 917569916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05ec980f09104fa3bf35ef905b867688, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneController: {fileID: 2001994564}
-  loadingStateText: {fileID: 693496255}
-  loadingPercentageText: {fileID: 2094254131}
 --- !u!223 &917569922
 Canvas:
   m_ObjectHideFlags: 0
@@ -502,6 +487,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 100
   m_TargetDisplay: 0
+--- !u!114 &917569923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917569916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18139903c2c7624bb90ebd6a3f86396, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneController: {fileID: 2001994564}
+  loadingStateText: {fileID: 693496255}
+  loadingPercentageText: {fileID: 2094254131}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
