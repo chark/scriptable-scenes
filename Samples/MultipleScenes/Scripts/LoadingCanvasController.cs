@@ -20,27 +20,27 @@ namespace CHARK.ScriptableScenes.Samples.MultipleScenes
         private void OnEnable()
         {
             var collectionEvents = sceneController.CollectionEvents;
-            collectionEvents.OnLoadEntered += OnLoadEntered;
+            collectionEvents.OnShowTransitionEntered += OnShowTransitionEntered;
             collectionEvents.OnLoadProgress += OnLoadProgress;
         }
 
         private void OnDisable()
         {
             var collectionEvents = sceneController.CollectionEvents;
-            collectionEvents.OnLoadEntered -= OnLoadEntered;
+            collectionEvents.OnShowTransitionEntered -= OnShowTransitionEntered;
             collectionEvents.OnLoadProgress -= OnLoadProgress;
         }
 
-        private void OnLoadEntered(CollectionLoadEventArgs args)
+        private void OnShowTransitionEntered()
         {
-            loadingStateText.text = "";
+            loadingStateText.text = "Loading...";
             loadingPercentageText.text = "0%";
         }
 
         private void OnLoadProgress(CollectionLoadProgressEventArgs args)
         {
             var collectionName = args.Collection.Name;
-            var percentage = (int) (args.CollectionLoadProgress * 100);
+            var percentage = (int)(args.CollectionLoadProgress * 100);
 
             loadingStateText.text = $"Loading \"{collectionName}\"...";
             loadingPercentageText.text = $"{percentage}%";
