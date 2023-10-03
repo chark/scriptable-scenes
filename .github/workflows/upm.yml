@@ -16,19 +16,24 @@ jobs:
       PKG_ROOT: Packages/com.chark.scriptable-scenes
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Move 'Assets/Samples' directory to 'Samples~'
-      run: |
-        ls -la
-        mv 'Assets/Samples' 'Samples~'
+      - name: Create '${{ github.event.inputs.branch }}' branch from '${{ env.PKG_ROOT }}' directory
+        run: |
+          git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
+          git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
+          git checkout '${{ github.event.inputs.branch }}'
+          git push -f -u origin '${{ github.event.inputs.branch }}'
 
-    - name: Checkout '${{ env.PKG_ROOT }}' directory on '${{ github.event.inputs.branch }}' branch
-      run: |
-        ls -la
-        git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
-        git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
-        git checkout '${{ github.event.inputs.branch }}'
-        git push -f -u origin '${{ github.event.inputs.branch }}'
+      - name: Move 'Assets/Samples' directory to 'Samples~'
+        run: |
+          git checkout "${GITHUB_REF}" -- Assets/Samples
+
+          mv 'Assets/Samples' 'Samples~'
+          rm -r 'Assets'
+
+          git add 'Samples~'
+          git commit -m 'Move samples'
+          git push -f -u origin '${{ github.event.inputs.branch }}'
