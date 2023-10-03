@@ -28,7 +28,7 @@ jobs:
           git subtree split -P '${{ env.PACKAGE_DIR }}' -b '${{ github.event.inputs.branch }}'
           git checkout '${{ github.event.inputs.branch }}'
 
-      - name: Move '${{ env.SAMPLE_SRC_DIR }} directory to ${{ env.SAMPLE_DST_DIR }}
+      - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
           rm -f '${{ env.SAMPLE_SRC_DIR }}.meta'
 
