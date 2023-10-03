@@ -13,23 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PKG_ROOT: Packages/com.chark.scriptable-scenes
+      PACKAGE_DIR: Packages/com.chark.scriptable-scenes
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Create '${{ github.event.inputs.branch }}' branch from '${{ env.PKG_ROOT }}' directory
+      - name: Create '${{ github.event.inputs.branch }}' branch from '${{ env.PACKAGE_DIR }}' directory
         run: |
           git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
-          git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
+          git subtree split -P '${{ env.PACKAGE_DIR }}' -b '${{ github.event.inputs.branch }}'
           git checkout '${{ github.event.inputs.branch }}'
           git push -f -u origin '${{ github.event.inputs.branch }}'
 
       - name: Move 'Assets/Samples' directory to 'Samples~'
         run: |
-          git checkout "${GITHUB_REF}" -- Assets/Samples
+          git checkout "${GITHUB_REF#refs/heads/}" -- Assets/Samples
 
           mv 'Assets/Samples' 'Samples~'
           rm -r 'Assets'
