@@ -57,10 +57,6 @@ UserSettings/
 InitTestScene*.unity
 InitTestScene*.unity.meta
 
-# Package specific
-Assets/Samples
-Assets/Samples.meta
-
 # Odin Inspector (used for testing)
 Assets/Plugins/Sirenix
 Assets/Plugins/Sirenix.meta
