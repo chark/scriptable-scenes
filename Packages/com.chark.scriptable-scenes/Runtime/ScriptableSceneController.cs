@@ -68,6 +68,7 @@ namespace CHARK.ScriptableScenes
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.FoldoutGroup("Debug", Expanded = true)]
         [Sirenix.OdinInspector.ShowInInspector]
+        [Sirenix.OdinInspector.ReadOnly]
 #endif
         private ScriptableSceneCollection loadedCollection;
 
@@ -91,6 +92,11 @@ namespace CHARK.ScriptableScenes
         /// <summary>
         /// Currently loading collection.
         /// </summary>
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Debug", Expanded = true)]
+        [Sirenix.OdinInspector.ShowInInspector]
+        [Sirenix.OdinInspector.ReadOnly]
+#endif
         public ScriptableSceneCollection LoadingCollection { get; private set; }
 
         private void Awake()
