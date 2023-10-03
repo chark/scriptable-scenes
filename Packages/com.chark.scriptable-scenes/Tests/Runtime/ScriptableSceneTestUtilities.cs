@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CHARK.ScriptableScenes.Tests
+namespace CHARK.ScriptableScenes.Tests.Runtime
 {
     internal static class ScriptableSceneTestUtilities
     {
@@ -13,13 +13,16 @@ namespace CHARK.ScriptableScenes.Tests
         /// </summary>
         internal class SceneDefinition
         {
-            internal string ScenePath => scene.name;
+            internal string ScenePath { get; }
 
-            private Scene scene;
-
-            public SceneDefinition(Scene scene)
+            internal SceneDefinition(TestSceneId id)
             {
-                this.scene = scene;
+                ScenePath = $"{ScriptableSceneTestConstants.ScenePath}/{id}.unity";
+            }
+
+            internal SceneDefinition(Scene scene)
+            {
+                ScenePath = scene.path;
             }
         }
 
@@ -40,6 +43,10 @@ namespace CHARK.ScriptableScenes.Tests
         /// <returns>
         /// Scene which can be used in tests.
         /// </returns>
+        [Obsolete(
+            "Broken in Unity 2022, such scenes cannot be loaded via LoadSceneAsyncInPlayMode() " +
+            "anymore for some reason..."
+        )]
         internal static Scene CreateTestScene(string sceneName)
         {
             var sceneGuid = Guid.NewGuid().ToString();

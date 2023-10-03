@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         unityVersion:
-          - 2020.3.34f1
+          - 2022.3.10f1
 
     steps:
 
@@ -68,5 +68,5 @@ jobs:
         uses: actions/upload-artifact@v2
         if: always()
         with:
-          name: Test Restuls
+          name: Test Results
           path: ${{ steps.tests.outputs.artifactsPath }}
