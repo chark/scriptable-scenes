@@ -28,3 +28,4 @@ https://github.com/chark/scriptable-scenes.git#upm
 - [Documentation](../Packages/com.chark.scriptable-scenes/Documentation~/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](../Packages/com.chark.scriptable-scenes/CHANGELOG.md)
+- [License](../Packages/com.chark.scriptable-scenes/LICENSE.md)
