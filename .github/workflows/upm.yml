@@ -23,7 +23,7 @@ jobs:
     - name: Move 'Assets/Samples' directory to 'Samples~'
       run: |
         ls -la
-        mv -r 'Assets/Samples' 'Samples~'
+        mv 'Assets/Samples' 'Samples~'
 
     - name: Checkout '${{ env.PKG_ROOT }}' directory on '${{ github.event.inputs.branch }}' branch
       run: |
