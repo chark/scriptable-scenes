@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
+namespace CHARK.ScriptableScenes.Samples.MultipleScenes
 {
     internal sealed class MenuCanvasController : MonoBehaviour
     {

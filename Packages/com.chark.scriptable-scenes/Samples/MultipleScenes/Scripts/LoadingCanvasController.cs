@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using CHARK.ScriptableScenes.Events;
+﻿using CHARK.ScriptableScenes.Events;
 using TMPro;
 using UnityEngine;
 
-namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
+namespace CHARK.ScriptableScenes.Samples.MultipleScenes
 {
     internal sealed class LoadingCanvasController : MonoBehaviour
     {
@@ -40,10 +39,10 @@ namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
 
         private void OnLoadProgress(CollectionLoadProgressEventArgs args)
         {
-            var sceneName = args.Scene.Name;
+            var collectionName = args.Collection.Name;
             var percentage = (int) (args.CollectionLoadProgress * 100);
 
-            loadingStateText.text = $"Loading {sceneName}...";
+            loadingStateText.text = $"Loading \"{collectionName}\"...";
             loadingPercentageText.text = $"{percentage}%";
         }
     }
