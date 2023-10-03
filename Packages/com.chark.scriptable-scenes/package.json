@@ -17,12 +17,12 @@
   "samples": [
     {
       "displayName": "Defaults",
-      "description": "Sample which can be used as a starting point for this package.\n\nMake sure to update Build Settings with the following Scenes In Build:\n • SetupScene (0)\n • PlayScene (1)",
+      "description": "Sample which can be used as a starting point for this package.\n\nMake sure to update Build Settings with the following Scenes:\n • SetupScene (0)\n • PlayScene (1)",
       "path": "Samples~/Defaults"
     },
     {
       "displayName": "Multiple Scenes",
-      "description": "Complete sample which demonstrates on how to prepare multiple Collections with a loading Screen.\n\nMake sure to update Build Settings with the following Scenes In Build:\n • SetupScene (0)\n • MenuScene (1)\n • PlayScene (2)",
+      "description": "Complete sample which demonstrates on how to prepare multiple Collections with a loading Screen.\n\nMake sure to update Build Settings with the following Scenes:\n • SetupScene (0)\n • MenuScene (1)\n • PlayScene (2)",
       "path": "Samples~/MultipleScenes"
     }
   ]
