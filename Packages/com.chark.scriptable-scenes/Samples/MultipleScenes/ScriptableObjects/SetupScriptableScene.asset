@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: SetupScriptableScene
   m_EditorClassIdentifier: 
   sceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
-  scenePath: Packages/com.chark.scriptable-scenes/Samples/ScenesAndCollections/Scenes/SetupScene.unity
+  scenePath: Packages/com.chark.scriptable-scenes/Samples/MultipleScenes/Scenes/SetupScene.unity
+  prettyName: 
   isActivate: 1
   isPersist: 1
   sceneEvents:
