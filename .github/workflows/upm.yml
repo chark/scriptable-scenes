@@ -27,15 +27,19 @@ jobs:
           git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
           git subtree split -P '${{ env.PACKAGE_DIR }}' -b '${{ github.event.inputs.branch }}'
           git checkout '${{ github.event.inputs.branch }}'
-          git push -f -u origin '${{ github.event.inputs.branch }}'
 
       - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
           echo "Checking out ${{ env.SAMPLE_SRC_DIR }} from ${GITHUB_REF#refs/heads/}"
           git checkout "${GITHUB_REF#refs/heads/}" -- '${{ env.SAMPLE_SRC_DIR }}'
 
+          echo 'moving'
           mv '${{ env.SAMPLE_SRC_DIR }}' '${{ env.SAMPLE_DST_DIR }}'
 
+          echo 'adding'
           git add '${{ env.SAMPLE_DST_DIR }}'
           git commit -m 'Move samples'
+
+      - name: Push '${{ github.event.inputs.branch }}' branch
+        run: |
           git push -f -u origin '${{ github.event.inputs.branch }}'
