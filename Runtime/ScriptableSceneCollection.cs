@@ -38,9 +38,9 @@ namespace CHARK.ScriptableScenes
         private string prettyName;
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
 #else
-        [Header("Features")]
+        [Header("General")]
 #endif
         [Tooltip("Optional transition used to transition into and out of this collection")]
         [SerializeField]
@@ -49,7 +49,7 @@ namespace CHARK.ScriptableScenes
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.PropertySpace]
         [Sirenix.OdinInspector.ListDrawerSettings(DefaultExpandedState = true)]
-        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
 #endif
         [Tooltip("List of Scriptable Scenes to be loaded with this collection")]
         [SerializeField]
