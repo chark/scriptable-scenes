@@ -6,11 +6,11 @@ using UnityEngine;
 namespace CHARK.ScriptableScenes.Transitions
 {
     [CreateAssetMenu(
-        fileName = CreateAssetMenuConstants.BaseFileName + nameof(FadeScriptableSceneTransition),
-        menuName = CreateAssetMenuConstants.BaseMenuName + "/Fade Scriptable Scene Transition",
+        fileName = CreateAssetMenuConstants.BaseFileName + nameof(ScriptableSceneFadeTransition),
+        menuName = CreateAssetMenuConstants.BaseMenuName + "/Scriptable Scene Fade Transition",
         order = CreateAssetMenuConstants.TransitionOrder
     )]
-    internal sealed class FadeScriptableSceneTransition : ScriptableSceneTransition
+    internal sealed class ScriptableSceneFadeTransition : ScriptableSceneTransition
     {
 
 #if ODIN_INSPECTOR
