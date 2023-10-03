@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneAsset: {fileID: 102900000, guid: 855a6f574fd429d4e814a21d43f0ed9e, type: 3}
   scenePath: Packages/com.chark.scriptable-scenes/Samples/MultipleScenes/Scenes/MenuScene.unity
-  prettyName: 
+  prettyName: Menu Scene
   isActivate: 1
   isPersist: 0
   sceneEvents:

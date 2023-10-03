@@ -1,4 +1,4 @@
-﻿%YAML 1.1
+%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayScriptableSceneCollection
   m_EditorClassIdentifier: 
   guid: b89cbd1957aa6b4429f43d8ae2f97658
-  prettyName: Gameplay
+  prettyName: Gameplay Scene Collection
   transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
   scriptableScenes:
   - {fileID: 11400000, guid: ee9034e7b4fa2cb49bae58c037906c75, type: 2}

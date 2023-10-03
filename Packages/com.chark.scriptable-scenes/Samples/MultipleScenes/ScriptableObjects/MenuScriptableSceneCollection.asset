@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MenuScriptableSceneCollection
   m_EditorClassIdentifier: 
   guid: 29b938dba078c954bb3082acd12f028d
-  prettyName: Menu
+  prettyName: Menu Scene Collection
   transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
   scriptableScenes:
   - {fileID: 11400000, guid: ee9034e7b4fa2cb49bae58c037906c75, type: 2}
