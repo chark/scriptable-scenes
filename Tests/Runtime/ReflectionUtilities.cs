@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace CHARK.ScriptableScenes.Tests
+namespace CHARK.ScriptableScenes.Tests.Runtime
 {
     internal static class ReflectionUtilities
     {

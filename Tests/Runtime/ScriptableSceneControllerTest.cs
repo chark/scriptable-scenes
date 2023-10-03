@@ -1,23 +1,16 @@
 ﻿using System.Collections;
 using NUnit.Framework;
-using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-namespace CHARK.ScriptableScenes.Tests
+namespace CHARK.ScriptableScenes.Tests.Runtime
 {
     internal class ScriptableSceneControllerTests
     {
-        private Scene testSetupScene;
-        private Scene testMainScene;
-
         private ScriptableSceneController controller;
 
         [SetUp]
         public void SetUp()
         {
-            testSetupScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene_A");
-            testMainScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene_B");
-
             controller = ScriptableSceneTestUtilities.CreateController();
         }
 
@@ -26,8 +19,8 @@ namespace CHARK.ScriptableScenes.Tests
         {
             // Given: collection with two scenes.
             var collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition(testSetupScene),
-                new ScriptableSceneTestUtilities.SceneDefinition(testMainScene)
+                new ScriptableSceneTestUtilities.SceneDefinition(TestSceneId.TestSceneA),
+                new ScriptableSceneTestUtilities.SceneDefinition(TestSceneId.TestSceneB)
             );
 
             // When: loading a collection.
@@ -44,13 +37,14 @@ namespace CHARK.ScriptableScenes.Tests
             }
         }
 
+        // TODO: UnloadSceneAsync() is not working in Unity 2022 during playmode tests
         [UnityTest]
         public IEnumerator ShouldReloadSceneCollection()
         {
             // Given: loaded collection with two scenes.
             var collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition(testSetupScene),
-                new ScriptableSceneTestUtilities.SceneDefinition(testMainScene)
+                new ScriptableSceneTestUtilities.SceneDefinition(TestSceneId.TestSceneA),
+                new ScriptableSceneTestUtilities.SceneDefinition(TestSceneId.TestSceneB)
             );
 
             yield return controller.LoadRoutine(collection);

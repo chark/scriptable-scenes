@@ -5,7 +5,7 @@ using CHARK.ScriptableScenes.Events;
 using NUnit.Framework;
 using UnityEngine.TestTools;
 
-namespace CHARK.ScriptableScenes.Tests
+namespace CHARK.ScriptableScenes.Tests.Runtime
 {
     internal class ScriptableSceneControllerEventTest
     {
@@ -23,9 +23,8 @@ namespace CHARK.ScriptableScenes.Tests
             collectionEvents = controller.CollectionEvents;
             sceneEvents = controller.SceneEvents;
 
-            var testScene = ScriptableSceneTestUtilities.CreateTestScene("TestScene");
             collection = ScriptableSceneTestUtilities.CreateCollection(
-                new ScriptableSceneTestUtilities.SceneDefinition(testScene)
+                new ScriptableSceneTestUtilities.SceneDefinition(TestSceneId.TestSceneA)
             );
 
             scene = collection.Scenes.First();
@@ -160,6 +159,7 @@ namespace CHARK.ScriptableScenes.Tests
             Assert.AreEqual(1f, sceneLoadProgress);
         }
 
+        // TODO: UnloadSceneAsync() is not working in Unity 2022 during playmode tests
         [UnityTest]
         public IEnumerator ShouldInvokeSceneOnUnloadEntered()
         {
@@ -175,6 +175,7 @@ namespace CHARK.ScriptableScenes.Tests
             Assert.AreEqual(scene, args.Scene);
         }
 
+        // TODO: UnloadSceneAsync() is not working in Unity 2022 during playmode tests
         [UnityTest]
         public IEnumerator ShouldInvokeSceneOnUnloadExited()
         {
