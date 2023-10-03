@@ -32,12 +32,19 @@ namespace CHARK.ScriptableScenes
         [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
         [Sirenix.OdinInspector.ReadOnly]
 #else
-        [CHARK.ScriptableScenes.PropertyAttributes.ReadOnly]
+        [PropertyAttributes.ReadOnly]
 #endif
 
         [Tooltip("Path to the scene asset")]
         [SerializeField]
         private string scenePath;
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#endif
+        [Tooltip("User-friendly name for this scene")]
+        [SerializeField]
+        private string prettyName;
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
@@ -68,7 +75,19 @@ namespace CHARK.ScriptableScenes
         /// <summary>
         /// Name of this scene.
         /// </summary>
-        public string Name => name;
+        public string Name
+        {
+            get
+            {
+                var trimmedPrettyName = prettyName?.Trim();
+                if (string.IsNullOrEmpty(trimmedPrettyName))
+                {
+                    return name;
+                }
+
+                return trimmedPrettyName;
+            }
+        }
 
         /// <summary>
         /// Path to the scene.
@@ -280,7 +299,28 @@ namespace CHARK.ScriptableScenes
 
         private IEnumerator UnloadInternalRoutine()
         {
-            yield return SceneManager.UnloadSceneAsync(scenePath);
+            var scene = SceneManager.GetSceneByPath(scenePath);
+            if (scene.IsValid() == false)
+            {
+                Debug.LogError(
+                    $"Cannot unload scene at path \"{scenePath}\", scene is invalid",
+                    this
+                );
+
+                yield break;
+            }
+
+            if (scene.isLoaded == false)
+            {
+                Debug.LogError(
+                    $"Cannot unload scene at path \"{scenePath}\", scene is not loaded",
+                    this
+                );
+
+                yield break;
+            }
+
+            yield return SceneManager.UnloadSceneAsync(scene);
         }
 
         private void SetActiveInternal()

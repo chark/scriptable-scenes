@@ -11,7 +11,6 @@ namespace CHARK.ScriptableScenes
     [AddComponentMenu(
         AddComponentMenuConstants.BaseMenuName + "/Scriptable Scene Controller Debugger"
     )]
-    [RequireComponent(typeof(ScriptableSceneController))]
     internal sealed class ScriptableSceneControllerDebugger : MonoBehaviour
     {
 #if ODIN_INSPECTOR
@@ -20,19 +19,32 @@ namespace CHARK.ScriptableScenes
         [Header("General")]
 #endif
         [SerializeField]
+        private ScriptableSceneController controller;
+
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
+#else
+        [Header("Features")]
+#endif
+        [SerializeField]
         private bool isDebugCollectionEvents = true;
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
 #endif
         [SerializeField]
         private bool isDebugSceneEvents = true;
 
-        private ScriptableSceneController controller;
-
         private void Awake()
         {
-            controller = GetComponent<ScriptableSceneController>();
+            controller = GetComponentInParent<ScriptableSceneController>();
+
+            if (controller)
+            {
+                return;
+            }
+
+            Debug.LogError($"{nameof(controller)} is not set", this);
         }
 
         private void OnEnable()
