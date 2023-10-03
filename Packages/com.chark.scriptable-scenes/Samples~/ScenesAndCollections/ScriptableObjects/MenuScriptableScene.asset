@@ -12,8 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: MenuScriptableScene
   m_EditorClassIdentifier: 
-  sceneBuildIndex: 1
-  scenePath: Assets/Scenes/MenuScene.unity
   sceneAsset: {fileID: 102900000, guid: 855a6f574fd429d4e814a21d43f0ed9e, type: 3}
+  scenePath: Packages/com.chark.scriptable-scenes/Samples/ScenesAndCollections/Scenes/MenuScene.unity
   isActivate: 1
   isPersist: 0
+  sceneEvents:
+    onLoadEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadProgress:
+      m_PersistentCalls:
+        m_Calls: []
+    onUnloadEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onUnloadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onActivateEntered:
+      m_PersistentCalls:
+        m_Calls: []
+    onActivateExited:
+      m_PersistentCalls:
+        m_Calls: []

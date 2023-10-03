@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: SetupScriptableScene
   m_EditorClassIdentifier: 
-  sceneBuildIndex: 0
-  scenePath: Assets/Scenes/SetupScene.unity
   sceneAsset: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}
+  scenePath: Packages/com.chark.scriptable-scenes/Samples/ScenesAndCollections/Scenes/SetupScene.unity
   isActivate: 1
   isPersist: 1
   sceneEvents:
@@ -22,6 +21,9 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     onLoadExited:
+      m_PersistentCalls:
+        m_Calls: []
+    onLoadProgress:
       m_PersistentCalls:
         m_Calls: []
     onUnloadEntered:

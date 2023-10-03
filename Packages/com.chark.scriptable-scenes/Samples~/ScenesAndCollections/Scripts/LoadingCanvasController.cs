@@ -1,8 +1,9 @@
-﻿using CHARK.ScriptableScenes.Events;
+﻿using System.Linq;
+using CHARK.ScriptableScenes.Events;
 using TMPro;
 using UnityEngine;
 
-namespace CHARK.ScriptableScenes
+namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
 {
     internal sealed class LoadingCanvasController : MonoBehaviour
     {
@@ -16,6 +17,21 @@ namespace CHARK.ScriptableScenes
 
         [SerializeField]
         private TMP_Text loadingPercentageText;
+
+        private void Awake()
+        {
+            if (loadingStateText == false)
+            {
+                loadingStateText = GetComponentsInChildren<TMP_Text>()
+                    .FirstOrDefault(comp => comp.name == "LoadingStateText");
+            }
+
+            if (loadingPercentageText == false)
+            {
+                loadingPercentageText = GetComponentsInChildren<TMP_Text>()
+                    .FirstOrDefault(comp => comp.name == "LoadingPercentageText");
+            }
+        }
 
         private void OnEnable()
         {

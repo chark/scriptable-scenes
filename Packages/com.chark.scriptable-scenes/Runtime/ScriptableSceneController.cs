@@ -2,6 +2,7 @@
 using CHARK.ScriptableScenes.Events;
 using CHARK.ScriptableScenes.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CHARK.ScriptableScenes
 {
@@ -14,16 +15,16 @@ namespace CHARK.ScriptableScenes
     )]
     public sealed class ScriptableSceneController : MonoBehaviour
     {
-        private enum SceneLoadMode
+        private enum CollectionLoadMode
         {
-            [Tooltip("Scenes will not be loaded automatically")]
+            [Tooltip("Collection will not be loaded automatically")]
             // ReSharper disable once UnusedMember.Local
             None,
 
-            [Tooltip("Automatically load scenes in Awake")]
+            [Tooltip("Automatically load collection in Awake() method")]
             Awake,
 
-            [Tooltip("Automatically load scenes in Start")]
+            [Tooltip("Automatically load collection in Start() method")]
             Start,
         }
 
@@ -34,8 +35,9 @@ namespace CHARK.ScriptableScenes
         private ScriptableSceneCollection initialCollection;
 
         [Tooltip("Should and when " + nameof(initialCollection) + " be loaded?")]
+        [FormerlySerializedAs("initialSceneLoadMode")]
         [SerializeField]
-        private SceneLoadMode initialSceneLoadMode = SceneLoadMode.Start;
+        private CollectionLoadMode initialCollectionLoadMode = CollectionLoadMode.Start;
 
         [Header("Events")]
         [Tooltip("handler for global (invoked for all collections) collection events")]
@@ -72,7 +74,7 @@ namespace CHARK.ScriptableScenes
 
         private void Awake()
         {
-            if (initialSceneLoadMode != SceneLoadMode.Awake)
+            if (initialCollectionLoadMode != CollectionLoadMode.Awake)
             {
                 return;
             }
@@ -86,7 +88,7 @@ namespace CHARK.ScriptableScenes
 
         private void Start()
         {
-            if (initialSceneLoadMode != SceneLoadMode.Start)
+            if (initialCollectionLoadMode != CollectionLoadMode.Start)
             {
                 return;
             }
