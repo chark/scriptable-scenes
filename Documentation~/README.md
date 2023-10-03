@@ -50,7 +50,7 @@ To create a new collection you'll need the following:
 
 And **optionally**:
 
-- [Scriptable Scene Transition] component.
+- [Scriptable Scene Transition] asset.
 - [Fade Canvas] component.
 
 ### Scriptable Scene
