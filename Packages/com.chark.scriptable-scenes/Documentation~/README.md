@@ -116,7 +116,7 @@ You can adjust the following properties on this component:
 
 By default, the package includes a simple fade transition which can be used to fade-in/fade-out a loading screen when switching between scenes (custom transitions can also be created by inheriting [ScriptableSceneTransition] class).
 
-To create a new _Scriptable Scene Fade Transition_, right-click in the _Project Window_ and select _Create/CHARK/Scriptable Scenes/Scriptable Scene Collection_:
+To create a new _Fade Scriptable Scene Transition_, right-click in the _Project Window_ and select _Create/CHARK/Scriptable Scenes/Fade Scriptable Scene Transition_:
 
 <p align="center">
   <img src="fade-transition-asset.png"/>
@@ -130,7 +130,7 @@ You can adjust the following properties on this asset:
 - **Fade In Duration Seconds** - how long should the fade in effect take.
 - **Fade Out Duration Seconds** - how long should the fade out effect take.
 
-Finally, after you have created the _Scriptable Scene Fade Transition_ asset, add [Fade Canvas] component onto the loading screen `Canvas` in your setup/preload scene:
+Finally, after you have created the _Fade Scriptable Scene Transition_ asset, add [Fade Canvas] component onto the loading screen `Canvas` in your setup/preload scene:
 
 <p align="center">
   <img src="fade-transition-canvas.png"/>
