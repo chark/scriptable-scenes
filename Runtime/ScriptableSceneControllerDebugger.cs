@@ -14,9 +14,17 @@ namespace CHARK.ScriptableScenes
     [RequireComponent(typeof(ScriptableSceneController))]
     internal sealed class ScriptableSceneControllerDebugger : MonoBehaviour
     {
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#else
+        [Header("General")]
+#endif
         [SerializeField]
         private bool isDebugCollectionEvents = true;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#endif
         [SerializeField]
         private bool isDebugSceneEvents = true;
 

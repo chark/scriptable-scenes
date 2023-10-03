@@ -28,26 +28,48 @@ namespace CHARK.ScriptableScenes
             Start,
         }
 
-        // ReSharper disable once NotAccessedField.Local
-        [Header("Configuration")]
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#else
+        [Header("General")]
+#endif
         [Tooltip("Scene collection which is first to be loaded when the game runs in build mode")]
         [SerializeField]
         private ScriptableSceneCollection initialCollection;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("General", Expanded = true)]
+#endif
         [Tooltip("Should and when " + nameof(initialCollection) + " be loaded?")]
         [FormerlySerializedAs("initialSceneLoadMode")]
         [SerializeField]
         private CollectionLoadMode initialCollectionLoadMode = CollectionLoadMode.Start;
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Collection Events")]
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+#else
+        [Header("Events")]
+#endif
         [Header("Events")]
         [Tooltip("handler for global (invoked for all collections) collection events")]
         [SerializeField]
         private CollectionEventHandler collectionEvents = new();
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Scene Events")]
+        [Sirenix.OdinInspector.InlineProperty]
+        [Sirenix.OdinInspector.HideLabel]
+#endif
         [Tooltip("Handler for global (invoked for all scenes) scene events")]
         [SerializeField]
         private SceneEventHandler sceneEvents = new();
 
+#if ODIN_INSPECTOR
+        [Sirenix.OdinInspector.FoldoutGroup("Debug", Expanded = true)]
+        [Sirenix.OdinInspector.ShowInInspector]
+#endif
         private ScriptableSceneCollection loadedCollection;
 
         /// <summary>
