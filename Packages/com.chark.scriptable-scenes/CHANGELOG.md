@@ -35,8 +35,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Scenes not added to build settings can now be Opened, Loaded and Activated in Editor. In Player, a
-  warning will be printed for such scenes.
+- Scenes not added to build settings can now be Opened, Loaded and Activated in Editor. In Player, a warning will be printed for such scenes.
 - Removed `BuildIndex` from `BaseScriptableScene` (want to hide it).
 
 ## [v0.0.6](https://github.com/chark/scriptable-scenes/compare/v0.0.5...v0.0.6) - 2022-10-17
@@ -44,8 +43,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Status icon which shown in Scene Manager indicating if a collection is added to Build Settings.
-- Warnings on `ScriptableSceneCollection` and `ScriptableScene` assets which will be if a scene is
-  not added to Build Settings.
+- Warnings on `ScriptableSceneCollection` and `ScriptableScene` assets which will be if a scene is not added to Build Settings.
 - Button in `ScriptableScene` editor to add scene to Build Settings.
 
 ## [v0.0.5](https://github.com/chark/scriptable-scenes/compare/v0.0.4...v0.0.5) - 2022-10-16
@@ -102,17 +100,9 @@ Initial preview version.
 
 ### Added
 
-- `ScriptableScene` - wrapper `ScriptableObject` for `SceneAsset`, which allows referencing scenes
-  without needing to hard-code scene name, path or build index. Click on _Assets > Create > CHARK >
-  Scriptable Scenes > Scriptable Scene_ to create.
-- `ScriptableSceneCollection` - container for `ScriptableScene` and is useful to load a set of
-  scenes at once (`SetupScene`, `UIScene`, `GameplayScene`, etc). Click on _Assets > Create >
-  CHARK > Scriptable Scenes > Scriptable Scene Collection_ to create.
+- `ScriptableScene` - wrapper `ScriptableObject` for `SceneAsset`, which allows referencing scenes without needing to hard-code scene name, path or build index. Click on _Assets > Create > CHARK > Scriptable Scenes > Scriptable Scene_ to create.
+- `ScriptableSceneCollection` - container for `ScriptableScene` and is useful to load a set of scenes at once (`SetupScene`, `UIScene`, `GameplayScene`, etc). Click on _Assets > Create > CHARK > Scriptable Scenes > Scriptable Scene Collection_ to create.
 - `ScriptableSceneTransition` - `ScriptableObject` that can be used to inject scene transitions.
-- `FadeScriptableSceneTransition` - built-in transition which simply fades a canvas in and out (
-  via `FadeCanvas`) during scene loading.
-- `FadeCanvas` - built-in component which takes care of actually fading the canvas and subscribing
-  to a `ScriptableSceneTransition`.
-- `ScriptableSceneManagerWindow` - Editor Window which can be used to quickly open a set of scene in
-  Edit and also Play mode. Click on _Window > CHARK > Scriptable Scenes > Scriptable Scene Manager_
-  to open.
+- `FadeScriptableSceneTransition` - built-in transition which simply fades a canvas in and out (via `FadeCanvas`) during scene loading.
+- `FadeCanvas` - built-in component which takes care of actually fading the canvas and subscribing to a `ScriptableSceneTransition`.
+- `ScriptableSceneManagerWindow` - Editor Window which can be used to quickly open a set of scene in Edit and also Play mode. Click on _Window > CHARK > Scriptable Scenes > Scriptable Scene Manager_ to open.
