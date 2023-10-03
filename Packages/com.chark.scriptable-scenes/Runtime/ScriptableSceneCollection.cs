@@ -24,7 +24,7 @@ namespace CHARK.ScriptableScenes
         [Sirenix.OdinInspector.ReadOnly]
 #else
         [Header("General")]
-        [CHARK.ScriptableScenes.PropertyAttributes.ReadOnly]
+        [PropertyAttributes.ReadOnly]
 #endif
         [Tooltip("Unique collection asset GUID")]
         [SerializeField]
@@ -35,7 +35,7 @@ namespace CHARK.ScriptableScenes
 #endif
         [Tooltip("User-friendly name for this collection")]
         [SerializeField]
-        public string prettyName;
+        private string prettyName;
 
 #if ODIN_INSPECTOR
         [Sirenix.OdinInspector.FoldoutGroup("Features", Expanded = true)]
