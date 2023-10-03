@@ -52,3 +52,7 @@ UserSettings/
 
 # Rider
 .idea/
+
+# Package specific.
+Assets/Samples
+Assets/Samples.meta

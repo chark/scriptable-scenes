@@ -15,5 +15,10 @@
     "architecture"
   ],
   "samples": [
+    {
+      "displayName": "ScenesAndCollections",
+      "description": "Complete sample which demonstrates on how to prepare Collections and Scenes.",
+      "path": "Samples~/ScenesAndCollections"
+    }
   ]
 }
