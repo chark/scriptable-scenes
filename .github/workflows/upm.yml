@@ -30,8 +30,6 @@ jobs:
 
       - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
-          git checkout "${GITHUB_REF#refs/heads/}" -- '${{ env.SAMPLE_SRC_DIR }}'
-
           mv '${{ env.SAMPLE_SRC_DIR }}' '${{ env.SAMPLE_DST_DIR }}'
 
           git config --global user.name 'github-bot'
