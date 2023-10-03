@@ -16,7 +16,7 @@ MonoBehaviour:
   transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
   scriptableScenes:
   - {fileID: 11400000, guid: ee9034e7b4fa2cb49bae58c037906c75, type: 2}
-  - {fileID: 11400000, guid: 173f6f76b52e7e64fb5fdf39b6d82eb9, type: 2}
+  - {fileID: 11400000, guid: 6ca2b571cf79ee742b90a536b3bcb5e3, type: 2}
   collectionEvents:
     onLoadEntered:
       m_PersistentCalls:
