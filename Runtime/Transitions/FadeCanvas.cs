@@ -13,7 +13,7 @@ namespace CHARK.ScriptableScenes.Transitions
     internal sealed class FadeCanvas : MonoBehaviour
     {
         [SerializeField]
-        private FadeScriptableSceneTransition transition;
+        private ScriptableSceneFadeTransition transition;
 
         // Optional raycaster.
         private GraphicRaycaster graphicRaycaster;
