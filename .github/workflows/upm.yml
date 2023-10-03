@@ -20,16 +20,13 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Checkout
+    - name: Move 'Assets/Samples' directory to 'Samples~'
+      run: |
+        mv -r 'Assets/Samples' 'Samples~'
+
+    - name: Checkout '${{ env.PKG_ROOT }}' directory on '${{ github.event.inputs.branch }}' branch
       run: |
         git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
         git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
         git checkout '${{ github.event.inputs.branch }}'
-
-    - name: Rename Assets/Samples to ${{ env.PKG_ROOT }}/Samples~
-      run: |
-        mv 'Assets/Samples' '${{ env.PKG_ROOT }}/Samples~'
-
-    - name: Push
-      run: |
         git push -f -u origin '${{ github.event.inputs.branch }}'
