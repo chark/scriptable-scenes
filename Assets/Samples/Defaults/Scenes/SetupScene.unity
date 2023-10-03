@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 975cbaf2353845d6b5e6d4ce9bcc4463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transition: {fileID: 11400000, guid: 9026c584bc045d74b91f5e7f2c48526c, type: 2}
+  transition: {fileID: 11400000, guid: 76f9587673c2b784ead63108b4977e2b, type: 2}
 --- !u!225 &917569919
 CanvasGroup:
   m_ObjectHideFlags: 0

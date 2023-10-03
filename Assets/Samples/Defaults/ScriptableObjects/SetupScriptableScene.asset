@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
   m_Name: SetupScriptableScene
   m_EditorClassIdentifier: 
-  sceneAsset: {fileID: 102900000, guid: 9a8c2fce698639a4f88f7834889abc56, type: 3}
+  sceneAsset: {fileID: 102900000, guid: 49b1ee9c900bd394c814cd16b2fbebd3, type: 3}
   scenePath: Assets/Samples/Defaults/Scenes/SetupScene.unity
   prettyName: Setup Scene
   isActivate: 1
