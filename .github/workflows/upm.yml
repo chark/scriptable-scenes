@@ -31,13 +31,14 @@ jobs:
       - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
           rm -f '${{ env.SAMPLE_SRC_DIR }}.meta'
-
           git mv '${{ env.SAMPLE_SRC_DIR }}' '${{ env.SAMPLE_DST_DIR }}'
 
           git config --global user.name 'github-bot'
           git config --global user.email 'github-bot@users.noreply.github.com'
 
+          git add '${{ env.SAMPLE_SRC_DIR }}.meta'
           git add '${{ env.SAMPLE_DST_DIR }}'
+
           git commit -m "Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'"
 
       - name: Push '${{ github.event.inputs.branch }}' branch
