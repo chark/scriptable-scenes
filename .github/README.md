@@ -5,6 +5,10 @@
 
 Simple scene loading and management system for Unity Engine, implemented via scriptable objects.
 
+<p align="center">
+  <img src="screenshot.png"/>
+</p>
+
 :warning: **Warning, this is a preview package and might change at any time!**
 
 ## Features
@@ -13,7 +17,7 @@ Simple scene loading and management system for Unity Engine, implemented via scr
 - Easily load sets of scenes
 - Persistent scenes
 - Custom transition support
-- Event-based
+- Unity Event support
 
 ## Installation
 
@@ -21,6 +25,11 @@ This package can be installed via the Package Manager by [Installing from a Git 
 
 ```text
 https://github.com/chark/scriptable-scenes.git#upm
+```
+
+Alternatively, you can also install it by adding the following line to `Packages/manifest.json`:
+```text
+"com.chark.scriptable-scenes": "https://github.com/chark/scriptable-scenes.git#upm"
 ```
 
 ## Links
