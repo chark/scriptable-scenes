@@ -14,7 +14,7 @@ jobs:
 
     env:
       PACKAGE_DIR: Packages/com.chark.scriptable-scenes
-      SAMPLE_SRC_DIR: Assets/Samples
+      SAMPLE_SRC_DIR: Samples
       SAMPLE_DST_DIR: Samples~
 
     steps:
@@ -30,13 +30,13 @@ jobs:
 
       - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
-          echo "Checking out ${{ env.SAMPLE_SRC_DIR }} from ${GITHUB_REF#refs/heads/}"
           git checkout "${GITHUB_REF#refs/heads/}" -- '${{ env.SAMPLE_SRC_DIR }}'
 
-          echo 'moving'
           mv '${{ env.SAMPLE_SRC_DIR }}' '${{ env.SAMPLE_DST_DIR }}'
 
-          echo 'adding'
+          git config --global user.name 'github-bot'
+          git config --global user.email 'github-bot@users.noreply.github.com'
+
           git add '${{ env.SAMPLE_DST_DIR }}'
           git commit -m 'Move samples'
 
