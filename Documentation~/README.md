@@ -60,8 +60,8 @@ First you'll need to define scenes which go into the collection. Instead of spec
 To create a _Scriptable Scene_ asset, right-click in the _Project Window_ and select _Create/CHARK/Scriptable Scenes/Scriptable Scene_:
 
 <p align="center">
-  <img hspace="2%" width="40%" src="scriptable-scene-setup.png"/>
-  <img hspace="2%" width="40%" src="scriptable-scene-play.png"/>
+  <img hspace="2%" width="30%" src="scriptable-scene-setup.png"/>
+  <img hspace="2%" width="30%" src="scriptable-scene-play.png"/>
 </p>
 
 You can adjust the following properties on this asset:
