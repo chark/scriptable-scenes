@@ -95,6 +95,23 @@ namespace CHARK.ScriptableScenes
 
         private void Awake()
         {
+            var otherController = FindObjectOfType<ScriptableSceneController>();
+            if (otherController && otherController != this)
+            {
+                var controllerGameObject = otherController.gameObject;
+                var controllerScene = controllerGameObject.scene;
+
+                Debug.LogError(
+                    ""
+                    + $"Only one {nameof(ScriptableSceneController)} may exists."
+                    + $" Scene \"{controllerScene.name}\" already contains one",
+                    this
+                );
+
+                enabled = false;
+                return;
+            }
+
             if (initialCollectionLoadMode != CollectionLoadMode.Awake)
             {
                 return;
