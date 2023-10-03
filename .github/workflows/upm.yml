@@ -27,6 +27,7 @@ jobs:
 
     - name: Checkout '${{ env.PKG_ROOT }}' directory on '${{ github.event.inputs.branch }}' branch
       run: |
+        ls -la
         git branch -d '${{ github.event.inputs.branch }}' &> /dev/null || echo '${{ github.event.inputs.branch }} branch not found'
         git subtree split -P '${{ env.PKG_ROOT }}' -b '${{ github.event.inputs.branch }}'
         git checkout '${{ github.event.inputs.branch }}'
