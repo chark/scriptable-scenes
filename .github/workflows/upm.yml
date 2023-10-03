@@ -8,18 +8,28 @@ on:
         default: 'upm'
 
 jobs:
-  split-upm:
-    name: Split UPM branch
+  deploy-upm:
+    name: Deploy to UPM branch
     runs-on: ubuntu-latest
+
+    env:
+      PKG_ROOT: Packages/com.chark.scriptable-scenes
+
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: split upm branch
+
+    - name: Checkout
       run: |
         git branch -d ${{ github.event.inputs.branch }} &> /dev/null || echo the branch not found
         git subtree split -P "$PKG_ROOT" -b ${{ github.event.inputs.branch }}
         git checkout ${{ github.event.inputs.branch }}
+
+    - name: Rename Samples to Samples~
+      run: |
+        mv "$PKG_ROOT/Samples" "$PKG_ROOT/Samples~"
+
+    - name: Push
+      run: |
         git push -f -u origin ${{ github.event.inputs.branch }}
-      env:
-        PKG_ROOT: Packages/com.chark.scriptable-scenes

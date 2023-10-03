@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d764409e2a2347eba48b0c2f5e79885f, type: 3}
-  m_Name: PlayScriptableScene
+  m_Name: InvalidScriptableScene
   m_EditorClassIdentifier: 
-  sceneAsset: {fileID: 102900000, guid: 03c9f4687584bc948b35ea7245abbaf3, type: 3}
-  scenePath: Packages/com.chark.scriptable-scenes/Samples/ScenesAndCollections/Scenes/PlayScene.unity
+  sceneAsset: {fileID: 102900000, guid: ae3ef32b98f76b94bb5853761daf0eea, type: 3}
+  scenePath: Packages/com.chark.scriptable-scenes/Samples/ScenesAndCollections/Scenes/InvalidScene.unity
   isActivate: 1
-  isPersist: 0
+  isPersist: 1
   sceneEvents:
     onLoadEntered:
       m_PersistentCalls:
