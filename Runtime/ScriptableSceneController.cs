@@ -52,7 +52,6 @@ namespace CHARK.ScriptableScenes
 #else
         [Header("Events")]
 #endif
-        [Header("Events")]
         [Tooltip("handler for global (invoked for all collections) collection events")]
         [SerializeField]
         private CollectionEventHandler collectionEvents = new();
