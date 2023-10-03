@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
+namespace CHARK.ScriptableScenes.Samples.MultipleScenes
 {
     internal static class GameEvents
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CHARK.ScriptableScenes.Samples.ScenesAndCollections
+namespace CHARK.ScriptableScenes.Samples.MultipleScenes
 {
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
