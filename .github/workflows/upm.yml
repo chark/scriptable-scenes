@@ -14,6 +14,8 @@ jobs:
 
     env:
       PACKAGE_DIR: Packages/com.chark.scriptable-scenes
+      SAMPLE_SRC_DIR: Assets/Samples
+      SAMPLE_DST_DIR: Samples~
 
     steps:
       - uses: actions/checkout@v2
@@ -27,13 +29,13 @@ jobs:
           git checkout '${{ github.event.inputs.branch }}'
           git push -f -u origin '${{ github.event.inputs.branch }}'
 
-      - name: Move 'Assets/Samples' directory to 'Samples~'
+      - name: Move '${{ env.SAMPLE_SRC_DIR }}' directory to '${{ env.SAMPLE_DST_DIR }}'
         run: |
-          git checkout "${GITHUB_REF#refs/heads/}" -- Assets/Samples
+          echo "Checking out ${{ env.SAMPLE_SRC_DIR }} from ${GITHUB_REF#refs/heads/}"
+          git checkout "${GITHUB_REF#refs/heads/}" -- '${{ env.SAMPLE_SRC_DIR }}'
 
-          mv 'Assets/Samples' 'Samples~'
-          rm -r 'Assets'
+          mv '${{ env.SAMPLE_SRC_DIR }}' '${{ env.SAMPLE_DST_DIR }}'
 
-          git add 'Samples~'
+          git add '${{ env.SAMPLE_DST_DIR }}'
           git commit -m 'Move samples'
           git push -f -u origin '${{ github.event.inputs.branch }}'
