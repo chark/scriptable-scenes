@@ -3,19 +3,20 @@
 [![Unity 2022.3+](https://img.shields.io/badge/unity-2022.3%2B-blue.svg)](https://unity3d.com/get-unity/download)
 [![Actions Status](https://github.com/chark/scriptable-scenes/workflows/CI/badge.svg)](https://github.com/chark/scriptable-scenes/actions)
 
-Simple scene loading and management system for Unity Engine, implemented via scriptable objects.
+Simple scene loading and management system for Unity Engine, implemented via Scriptable Objects.
 
 <p align="center">
   <img src="screenshot.png"/>
 </p>
 
-:warning: **Warning, this is a preview package and might change at any time!**
+:warning: **Warning, this is a preview package, expect breaking changes between releases!**
 
 ## Features
 
-- Use assets to reference scenes instead of hard-coding
-- Easily load sets of scenes
-- Persistent scenes
+- Use assets to reference scenes instead of hard-coding paths or build indexes
+- Easily load and unload sets of scenes
+- Additively loaded scenes
+- Persistent scenes (setup/preload/boostrap scene)
 - Custom transition support
 - Unity Event support
 
@@ -27,10 +28,14 @@ This package can be installed via the Package Manager by [Installing from a Git 
 https://github.com/chark/scriptable-scenes.git#upm
 ```
 
-Alternatively, you can also install it by adding the following line to `Packages/manifest.json`:
-```text
-"com.chark.scriptable-scenes": "https://github.com/chark/scriptable-scenes.git#upm"
+Alternatively, manually install by adding the following entry to `Packages/manifest.json`:
+```json
+{
+  "com.chark.scriptable-scenes": "https://github.com/chark/scriptable-scenes.git#upm"
+}
 ```
+
+If you'd like to install a specific release, replace `upm` suffix with version number, e.g., `v0.0.9`. You can find all releases [here](https://github.com/chark/scriptable-scenes/releases).
 
 ## Links
 
