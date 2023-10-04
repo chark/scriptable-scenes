@@ -55,7 +55,7 @@ The following actions can be performed on each entry:
 
 **Note**, rearranging entries in this list will only affect your local editor and will not show up in version control.
 
-## Creating a new collection
+## Creating New Collection
 
 Instead of importing samples, you can start from scratch and create each asset and component manually.
 
