@@ -19,6 +19,7 @@ Simple scene loading and management system for Unity Engine, implemented via Scr
 - Persistent scenes (setup/preload/boostrap scene)
 - Custom transition support
 - Unity Event support
+- Odin Inspector support
 
 ## Installation
 
