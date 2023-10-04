@@ -97,7 +97,7 @@ namespace CHARK.ScriptableScenes
         [Sirenix.OdinInspector.ShowInInspector]
         [Sirenix.OdinInspector.ReadOnly]
 #endif
-        public ScriptableSceneCollection LoadingCollection { get; private set; }
+        private ScriptableSceneCollection LoadingCollection { get; set; }
 
         private void Awake()
         {
@@ -172,7 +172,7 @@ namespace CHARK.ScriptableScenes
         }
 
         /// <returns>
-        /// <c>true</c> i`f a collection which is currently being loaded is retrieved or
+        /// <c>true</c> if a collection which is currently being loaded is retrieved or
         /// <c>false</c> otherwise.
         /// </returns>
         public bool TryGetLoadingSceneCollection(out ScriptableSceneCollection collection)
