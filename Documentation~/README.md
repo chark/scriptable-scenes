@@ -15,7 +15,7 @@
 
 # Documentation
 
-This package provides as set of utilities, editor windows and scripts to manages scenes in your Unity projects. It works by setting up a set of assets which can then be used as references to load groups of scenes via editor windows (also during runtime) and runtime scripts.
+This package provides a set of utilities, editor windows and scripts to manage scenes in your Unity projects. It works by setting up a set of assets which can then be used as references to load groups of scenes via editor windows and runtime scripts.
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ Open [Scriptable Scene Window] by selecting _Window/CHARK/Scriptable Scenes_ men
   <img src="open-window.png"/>
 </p>
 
-This will open an Editor window which will allow you to view all [Scriptable Scene Collection] assets present in the project.
+This will open an Editor window which allows you to view all [Scriptable Scene Collection] assets present in the project.
 
-The [Defaults Sample] contains a set of [Scriptable Scene] assets and [Scriptable Scene Collection] assets which can be used as a baseline. Additionally, it includes a _SetupScene_ which can be used as a setup/preload scene. It also includes components needed for scene loading logic to work, namely the [Scriptable Scene Controller].
+The [Defaults Sample] contains a set of [Scriptable Scene] assets and [Scriptable Scene Collection] assets which can be used as a starting point for any project. Additionally, it includes a _SetupScene_ which can be used as a setup/preload scene (e.g., scene for manager classes, XR rig). It also includes components needed for scene loading logic to work, namely the [Scriptable Scene Controller].
 
 If you create new [Scriptable Scene Collection] assets, they will automatically appear in this window. Additionally, you can move, edit or delete the files created by this sample as per your project requirements:
 
@@ -47,11 +47,11 @@ If you create new [Scriptable Scene Collection] assets, they will automatically 
   <img src="window.png"/>
 </p>
 
-You can perform the following actions on each entry:
+The following actions can be performed on each entry:
 
-- **Open** - open selected collection in scene view & hierarchy.
-- **Play** - start the game and load selected collection.
-- **Load** - load selected collection, only available during play mode. This is handy to quickly switch between the scenes when the game is running.
+- **Open** - open selected [Scriptable Scene Collection] in scene view & hierarchy.
+- **Play** - start the game and load selected [Scriptable Scene Collection].
+- **Load** - load selected [Scriptable Scene Collection] during play mode. This is handy to quickly switch between the scenes when the game is running.
 
 **Note**, rearranging entries in this list will only affect your local editor and will not show up in version control.
 
@@ -81,13 +81,13 @@ To create a [Scriptable Scene] asset, right-click anywhere in the _Project Windo
   <img hspace="2%" width="30%" src="scriptable-scene-play.png"/>
 </p>
 
-After creating, select the asset, set the **Pretty Name** and select the correct **Scene Asset**.
+After creating, select the asset, set the **Pretty Name** field and specify scene in **Scene Asset** field.
 
 Available properties for customization:
 
 - **Scene Asset** - the `.unity` scene this asset is referring to. Drag in the scene file you want this asset to load.
 - **Pretty Name** - user-defined name for the scene. If left blank, a default name will be used.
-- **Is Active** - should this scene be [activated](https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.SetActiveScene.html) when it gets loaded by a collection? Set this to `true` for gameplay scenes.
+- **Is Active** - should this scene be [activated](https://docs.unity3d.com/ScriptReference/SceneManagement.SceneManager.SetActiveScene.html) when it gets loaded by a collection? Set this to `true` for main gameplay scenes.
 - **Is Persist** - should this scene never be unloaded, even when switching collections? Set this to `true` for setup/preload scenes.
 - **Scene Events** - events invoked on this [Scriptable Scene] asset.
 
@@ -101,7 +101,7 @@ To create a [Scriptable Scene Collection] asset, right-click in the _Project Win
   <img src="scriptable-scene-collection.png"/>
 </p>
 
-Open the asset, set **Pretty Name** and add your [Scriptable Scene] assets. 
+Open the asset, set **Pretty Name** and select your [Scriptable Scene] assets which will be loaded by this [Scriptable Scene Collection].
 
 Available properties for customization:
 
@@ -124,11 +124,11 @@ Once you have a set of collections ready, do the following in your primary setup
   <img src="scriptable-scene-controller.png"/>
 </p>
 
-The [Scriptable Scene Controller] component manages scene loading. You should always an instance of this component in one of your scenes in order to use this package. Keep in mind that only one instance of this component may exist in them game, therefore it is recommended to place this component in your setup/preload scene.
+The [Scriptable Scene Controller] component manages scene loading. **You should always have an instance of this component in one of your scenes in order to use this package**. Keep in mind that only one instance of this component may exist in them game, therefore it is recommended to place this component in your setup/preload scene.
 
 You can adjust the following properties on this component:
 
-- **Initial Collection** - [Scriptable Scene Collection] which will be loaded first in build. Usually a set of scenes representing the menu or a splash screen.
+- **Initial Collection** - [Scriptable Scene Collection] which will be loaded first in build. Usually a set of scenes, such as menu scene or a splash screen scene with the setup scene being the first one.
 - **Initial Collection Load Mode** - which Unity Lifecycle method to use when loading the **Initial collection**.
 - **Collection Events** - events invoked on any [Scriptable Scene Collection].
 - **Scene Events** - events invoked on any [Scriptable Scene].
@@ -137,7 +137,7 @@ You can adjust the following properties on this component:
 
 By default, the package includes a simple fade transition which can be used to fade-in/fade-out a loading screen when switching between scenes (custom transitions can also be created by inheriting [Scriptable Scene Transition] class).
 
-To create a new [Fade Scriptable Scene Transition], right-click in the _Project Window_ and select _Create/CHARK/Scriptable Scenes/Fade Scriptable Scene Transition_:
+To create a new [Fade Scriptable Scene Transition] asset, right-click in the _Project Window_ and select _Create/CHARK/Scriptable Scenes/Fade Scriptable Scene Transition_:
 
 <p align="center">
   <img src="fade-transition-asset.png"/>
@@ -157,13 +157,15 @@ Finally, after you have created the [Fade Scriptable Scene Transition] asset, ad
   <img src="fade-transition-canvas.png"/>
 </p>
 
+Afterward you can reference the [Fade Scriptable Scene Transition] in any of the [Scriptable Scene Collection] assets to enable fading.
+
 ## Scripting
 
 ### Loading Collections via Code
 
 First you must obtain a reference to a [Scriptable Scene Controller]. This can be done via [SerializeField](https://docs.unity3d.com/ScriptReference/SerializeField.html) or any other means, such as using `Object.FindObjectOfType<ScriptableSceneController>()` and so on, depending on your project setup.
 
-Additionally, you'll need to obtain a set of [Scriptable Scene Collection] references. Since these as Scriptable Objects, all you need to do is define a set of [SerializeField](https://docs.unity3d.com/ScriptReference/SerializeField.html) and load them directly. However, you can structure this however you like, e.g., by maintaining lists of scenes, loading them randomly, etc...
+Additionally, you'll need to obtain a set of [Scriptable Scene Collection] references. Since these as Scriptable Objects, all you need to do is define a set of [SerializeField](https://docs.unity3d.com/ScriptReference/SerializeField.html) and load them directly. However, you can load and structure this however you like, e.g., by maintaining lists of scenes, loading them randomly, etc...
 
 ```csharp
 using CHARK.ScriptableScenes;
@@ -197,11 +199,11 @@ internal sealed class GameManager : MonoBehaviour
 
 ### APIs
 
-Explore public APIs defined in the following scripts. Each `public` method and property is documented and should be self-explanatory:
+Explore public APIs defined in the following scripts, each `public` method and property is documented and should be self-explanatory:
 
 - [Scriptable Scene]
 - [Scriptable Scene Collection]
 - [Scriptable Scene Controller]
 - [Scriptable Scene Transition]
 
-For breaking changes, keep an eye out [Changelog].
+For breaking changes, keep an eye out for [Changelog].
