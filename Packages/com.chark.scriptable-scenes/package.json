@@ -5,7 +5,7 @@
     "name": "CHARK",
     "url": "https://chark.io"
   },
-  "version": "0.0.10",
+  "version": "0.0.11",
   "unity": "2022.3",
   "description": "Simple scene loading and management system for Unity Engine, implemented via scriptable objects.",
   "keywords": [

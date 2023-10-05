@@ -20,7 +20,7 @@ namespace CHARK.ScriptableScenes.Utilities
         /// <summary>
         /// Base menu order.
         /// </summary>
-        internal const int BaseOrder = -1000;
+        internal const int BaseOrder = 150;
 
         /// <summary>
         /// Order of transition menu items.

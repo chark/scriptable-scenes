@@ -15,7 +15,7 @@ namespace CHARK.ScriptableScenes.Utilities
         /// <summary>
         /// Base menu item priority for Window menu items.
         /// </summary>
-        internal const int BaseWindowPriority = -1000;
+        internal const int BaseWindowPriority = 150;
 
         /// <summary>
         /// Base menu item name for Create asset menu items.
@@ -25,6 +25,6 @@ namespace CHARK.ScriptableScenes.Utilities
         /// <summary>
         /// Base menu item priority for Create asset menu items.
         /// </summary>
-        internal const int BaseCreateItemPriority = -1000;
+        internal const int BaseCreateItemPriority = 150;
     }
 }
