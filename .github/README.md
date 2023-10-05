@@ -36,11 +36,10 @@ Alternatively, manually install by adding the following entry to `Packages/manif
 }
 ```
 
-If you'd like to install a specific release, replace `upm` suffix with version number, e.g., `v0.0.9`. You can find all releases [here](https://github.com/chark/scriptable-scenes/releases).
+If you'd like to install a specific release, replace `upm` suffix with version number, e.g., `v0.0.10`. You can find all releases [here](https://github.com/chark/scriptable-scenes/releases).
 
 ## Links
 
 - [Documentation](../Packages/com.chark.scriptable-scenes/Documentation~/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](../Packages/com.chark.scriptable-scenes/CHANGELOG.md)
-- [License](../Packages/com.chark.scriptable-scenes/LICENSE.md)
