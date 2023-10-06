@@ -1,6 +1,7 @@
 # Scriptable Scenes
 
 [![Unity 2022.3+](https://img.shields.io/badge/unity-2022.3%2B-blue.svg)](https://unity3d.com/get-unity/download)
+[![openupm](https://img.shields.io/npm/v/com.chark.scriptable-scenes?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.chark.scriptable-scenes/)
 [![Actions Status](https://github.com/chark/scriptable-scenes/workflows/CI/badge.svg)](https://github.com/chark/scriptable-scenes/actions)
 
 Simple scene loading and management system for Unity Engine, implemented via Scriptable Objects.
@@ -23,7 +24,12 @@ Simple scene loading and management system for Unity Engine, implemented via Scr
 
 ## Installation
 
-This package can be installed via the Package Manager by [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html):
+This package can be installed via [OpenUPM](https://openupm.com/packages/com.chark.scriptable-scenes):
+```text
+openupm add com.chark.scriptable-scenes
+```
+
+Or via the Unity Package Manager by [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html):
 
 ```text
 https://github.com/chark/scriptable-scenes.git#upm
