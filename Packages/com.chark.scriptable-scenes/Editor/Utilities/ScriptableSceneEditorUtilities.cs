@@ -124,6 +124,12 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             var scriptableScenes = collection.Scenes.ToList();
             if (scriptableScenes.Count == 0)
             {
+                Debug.LogWarning($"Collection {collection.Name} does not contain any scenes", collection);
+                return;
+            }
+
+            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
+            {
                 return;
             }
 
@@ -131,8 +137,6 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
             {
                 var scriptableScene = scriptableScenes[index];
                 var scenePath = scriptableScene.ScenePath;
-
-                EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
 
                 Scene scene;
                 if (index == 0)

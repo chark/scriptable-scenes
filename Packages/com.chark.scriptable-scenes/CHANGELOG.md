@@ -11,6 +11,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Menu item order to use `150` instead of `-1000`. This way `CHARK` won't dominate existing entries.
 
+### Fixed
+
+- Cancel button being ignored when switching scenes via the "Open" button.
+
 ## [v0.0.10](https://github.com/chark/scriptable-scenes/compare/v0.0.9...v0.0.10) - 2023-10-04
 
 ### Changed
