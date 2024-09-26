@@ -19,13 +19,13 @@ namespace CHARK.ScriptableScenes
         {
             [Tooltip("Collection will not be loaded automatically")]
             // ReSharper disable once UnusedMember.Local
-            None,
+            None = 0,
 
             [Tooltip("Automatically load collection in Awake() method")]
-            Awake,
+            Awake = 1,
 
             [Tooltip("Automatically load collection in Start() method")]
-            Start,
+            Start = 2,
         }
 
 #if ODIN_INSPECTOR
@@ -66,7 +66,7 @@ namespace CHARK.ScriptableScenes
         private SceneEventHandler sceneEvents = new();
 
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.FoldoutGroup("Debug", Expanded = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("Debug")]
         [Sirenix.OdinInspector.ShowInInspector]
         [Sirenix.OdinInspector.ReadOnly]
 #endif
@@ -93,7 +93,7 @@ namespace CHARK.ScriptableScenes
         /// Currently loading collection.
         /// </summary>
 #if ODIN_INSPECTOR
-        [Sirenix.OdinInspector.FoldoutGroup("Debug", Expanded = true)]
+        [Sirenix.OdinInspector.FoldoutGroup("Debug")]
         [Sirenix.OdinInspector.ShowInInspector]
         [Sirenix.OdinInspector.ReadOnly]
 #endif
@@ -123,11 +123,7 @@ namespace CHARK.ScriptableScenes
                 return;
             }
 
-#if UNITY_EDITOR
-            LoadSelectedOrOpenedCollection();
-#else
             LoadInitialSceneCollection();
-#endif
         }
 
         private void Start()
@@ -137,10 +133,18 @@ namespace CHARK.ScriptableScenes
                 return;
             }
 
-#if UNITY_EDITOR
-            LoadSelectedOrOpenedCollection();
-#else
             LoadInitialSceneCollection();
+        }
+
+        /// <summary>
+        /// Load the initial Scene Collection specified in <see cref="initialCollection"/>.
+        /// </summary>
+        public void LoadInitialSceneCollection()
+        {
+#if UNITY_EDITOR
+            LoadSelectedOrOpenedCollectionEditor();
+#else
+            LoadInitialSceneCollectionRuntime();
 #endif
         }
 
@@ -192,12 +196,12 @@ namespace CHARK.ScriptableScenes
         }
 
 #if UNITY_EDITOR
-        private void LoadSelectedOrOpenedCollection()
+        private void LoadSelectedOrOpenedCollectionEditor()
         {
-            StartCoroutine(LoadSelectedOrOpenedCollectionRoutine());
+            StartCoroutine(LoadSelectedOrOpenedCollectionRoutineEditor());
         }
 
-        private IEnumerator LoadSelectedOrOpenedCollectionRoutine()
+        private IEnumerator LoadSelectedOrOpenedCollectionRoutineEditor()
         {
             if (ScriptableSceneUtilities.TryGetSelectedCollection(out var selected))
             {
@@ -219,12 +223,12 @@ namespace CHARK.ScriptableScenes
             );
         }
 #else
-        private void LoadInitialSceneCollection()
+        private void LoadInitialSceneCollectionRuntime()
         {
-            StartCoroutine(LoadInitialSceneCollectionRoutine());
+            StartCoroutine(LoadInitialSceneCollectionRoutineRuntime());
         }
 
-        private IEnumerator LoadInitialSceneCollectionRoutine()
+        private IEnumerator LoadInitialSceneCollectionRoutineRuntime()
         {
             if (initialCollection == false)
             {

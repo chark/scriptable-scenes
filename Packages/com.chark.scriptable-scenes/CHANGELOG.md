@@ -7,6 +7,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [v0.0.11](https://github.com/chark/scriptable-scenes/compare/v0.0.10...v0.0.11) - 2023-XX-XX
 
+### Added
+
+- `LoadInitialSceneCollection` method to `ScriptableSceneController`.
+
 ### Changed
 
 - Menu item order to use `150` instead of `-1000`. This way `CHARK` won't dominate existing entries.
