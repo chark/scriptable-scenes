@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CHARK.ScriptableScenes.Events;
 using UnityEngine;
@@ -12,8 +13,21 @@ namespace CHARK.ScriptableScenes.Utilities
     /// </summary>
     internal static class ScriptableSceneUtilities
     {
-        private static readonly string SelectedCollectionKey =
-            typeof(ScriptableSceneUtilities).FullName + "_" + "Guids";
+        private static string SelectedCollectionKey
+        {
+            get
+            {
+                var projectAssetDirPath = Application.dataPath;
+                var projectDirPath = Path.GetDirectoryName(projectAssetDirPath);
+
+                // Project dir is used as id for editor keys, useful when using Parallel sync or similar.
+                var projectId = string.IsNullOrWhiteSpace(projectAssetDirPath)
+                    ? Application.productName
+                    : Path.GetFileName(projectDirPath);
+
+                return $"{nameof(ScriptableSceneUtilities)}.{projectId}.SelectedCollection";
+            }
+        }
 
         /// <returns>
         /// <c>true</c> if scene information is retrieved for <paramref name="obj"/> or

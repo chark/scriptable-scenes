@@ -14,6 +14,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Menu item order to use `150` instead of `-1000`. This way `CHARK` won't dominate existing entries.
+- Editor Prefs will now use project directory name as identifier, this should prevent issues when using Parallel Sync and similar plugins.
 
 ### Fixed
 
