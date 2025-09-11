@@ -279,9 +279,22 @@ namespace CHARK.ScriptableScenes
                 var parameters = new LoadSceneParameters(LoadSceneMode.Additive);
 
 #if UNITY_EDITOR
-                // Allow to load scenes which are not added to Build Settings (Editor only).
-                return UnityEditor.SceneManagement.EditorSceneManager
-                    .LoadSceneAsyncInPlayMode(scenePath, parameters);
+                var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
+                if (buildIndex < 0)
+                {
+                    Debug.LogWarning(
+                        $""
+                        + $"Loading scene '{scenePath}' which is not added to build settings, make "
+                        + $"sure to add it before making the final build or it wont load!",
+                        this
+                    );
+
+                    // Allow to load scenes which are not added to Build Settings (Editor only).
+                    return UnityEditor.SceneManagement.EditorSceneManager
+                        .LoadSceneAsyncInPlayMode(scenePath, parameters);
+                }
+
+                return SceneManager.LoadSceneAsync(scenePath, parameters);
 #else
                 return SceneManager.LoadSceneAsync(scenePath, parameters);
 #endif
