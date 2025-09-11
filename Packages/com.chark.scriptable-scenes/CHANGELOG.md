@@ -10,6 +10,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - `LoadInitialSceneCollection` method to `ScriptableSceneController`.
+- Warning which will be shown when loading a scene not added to build settings.
 
 ### Changed
 
