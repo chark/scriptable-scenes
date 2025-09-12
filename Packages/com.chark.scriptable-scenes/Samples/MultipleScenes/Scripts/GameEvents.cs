@@ -28,7 +28,7 @@ namespace CHARK.ScriptableScenes.Samples.MultipleScenes
 
         private static void SetupSceneController()
         {
-            sceneController = Object.FindObjectOfType<ScriptableSceneController>();
+            sceneController = Object.FindFirstObjectByType<ScriptableSceneController>();
         }
     }
 }

@@ -99,7 +99,7 @@ namespace CHARK.ScriptableScenes.Editor.Utilities
                 return;
             }
 
-            var sceneController = Object.FindObjectOfType<ScriptableSceneController>();
+            var sceneController = Object.FindFirstObjectByType<ScriptableSceneController>();
             if (sceneController)
             {
                 sceneController.LoadSceneCollection(collection);

@@ -101,7 +101,7 @@ namespace CHARK.ScriptableScenes
 
         private void Awake()
         {
-            var otherController = FindObjectOfType<ScriptableSceneController>();
+            var otherController = FindFirstObjectByType<ScriptableSceneController>();
             if (otherController && otherController != this)
             {
                 var controllerGameObject = otherController.gameObject;
